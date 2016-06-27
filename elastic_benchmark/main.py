@@ -9,6 +9,7 @@ import sys
 class ElasticSearchClient(object):
     def __init__(self):
         #self.client = Elasticsearch()
+        pass
 
     def index(self, run_type, action, num_servers,
               total_time, avg_runtime, timestamp):
