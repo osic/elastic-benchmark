@@ -27,7 +27,7 @@ def parse_pkb_output(output):
     regex_starts = [m.start() for m in re.finditer("{'metadata'", output)]
     regex_ends = [
         regex_starts[1],
-        output[regex_starts[1]:].index("\n\n\n")+regex_starts[1]]
+        output[regex_starts[1]:].index("} ")+1+regex_starts[1]]
     json_outputs = [
         output[regex_starts[0]:regex_ends[0]],
         output[regex_starts[1]:regex_ends[1]]]
