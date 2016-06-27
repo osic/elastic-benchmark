@@ -3,13 +3,12 @@ import json
 import re
 import sys
 
-#from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch
 
 
 class ElasticSearchClient(object):
     def __init__(self):
-        #self.client = Elasticsearch()
-        pass
+        self.client = Elasticsearch()
 
     def index(self, run_type, action, num_servers,
               total_time, avg_runtime, timestamp):
@@ -19,10 +18,9 @@ class ElasticSearchClient(object):
             "total_time": total_time,
             "avg_runtime": avg_runtime,
             "timestamp": timestamp}
-        print doc
-        #self.client.index(
-        #    index="{0}-benchmark-index".format(run_type),
-        #    doc_type='results', body=doc)
+        self.client.index(
+            index="{0}-benchmark-index".format(run_type),
+            doc_type='results', body=doc)
 
 
 def parse_pkb_output(output):
@@ -69,7 +67,7 @@ class ArgumentParser(argparse.ArgumentParser):
 
 def entry_point():
     cl_args = ArgumentParser().parse_args()
-    func = locals()["parse-{0}-output".format(cl_args.type)]
+    func = globals()["parse_{0}_output".format(cl_args.type)]
     output = func(cl_args.input.read())
     esc = ElasticSearchClient()
     esc.index(run_type=cl_args.type, **output)
