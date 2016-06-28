@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import json
 import re
 import sys
@@ -43,7 +44,7 @@ def parse_pkb_output(output):
                    if o.get("metric") == "End to End Runtime"][0]
     return {"action": "create", "num_servers": num_servers,
             "total_time": total_time, "avg_runtime": avg_runtime,
-            "timestamp": timestamp}
+            "timestamp": str(datetime.datetime.fromtimestamp(int(timestamp)))}
 
 
 class ArgumentParser(argparse.ArgumentParser):
