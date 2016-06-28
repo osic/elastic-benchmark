@@ -11,17 +11,10 @@ class ElasticSearchClient(object):
     def __init__(self):
         self.client = Elasticsearch()
 
-    def index(self, run_type, action, num_servers,
-              total_time, avg_runtime, timestamp):
-        doc = {
-            "action": action,
-            "num_servers": num_servers,
-            "total_time": total_time,
-            "avg_runtime": avg_runtime,
-            "timestamp": timestamp}
+    def index(self, run_type, **kwargs):
         self.client.index(
             index="{0}-benchmark-index".format(run_type),
-            doc_type='results', body=doc)
+            doc_type='results', body=kwargs)
 
 
 def parse_pkb_output(output):
@@ -42,9 +35,9 @@ def parse_pkb_output(output):
     avg_runtime = total_time / num_servers
     timestamp = [o.get("timestamp") for o in json_outputs
                    if o.get("metric") == "End to End Runtime"][0]
-    return {"action": "create", "num_servers": num_servers,
-            "total_time": total_time, "avg_runtime": avg_runtime,
-            "timestamp": str(datetime.datetime.fromtimestamp(int(timestamp)))}
+    return [{"action": "create", "num_servers": num_servers,
+             "total_time": total_time, "avg_runtime": avg_runtime,
+             "timestamp": str(datetime.datetime.fromtimestamp(int(timestamp)))}]
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -71,4 +64,5 @@ def entry_point():
     func = globals()["parse_{0}_output".format(cl_args.type)]
     output = func(cl_args.input.read())
     esc = ElasticSearchClient()
-    esc.index(run_type=cl_args.type, **output)
+    for line in output:
+        esc.index(run_type=cl_args.type, **output)
