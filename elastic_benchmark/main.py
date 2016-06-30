@@ -55,6 +55,7 @@ def parse_rally_output(output):
     json_outputs = json.loads(output)
     return_data = []
     for o in json_output:
+        scenario_name = o.get("key").get("name")
         # direct access but should always have at least one result right?
         run_at = o.get("result")[0].get("timestamp")
         total_runtime = o.get("full_duration")
@@ -65,6 +66,7 @@ def parse_rally_output(output):
                         if len(r.get("error")) > 0]
         average_action_succes = sum(success_list) / len(duration_list)
         return_data.append({
+            "scenario_name": scenario_name,
             "run_at": run_at,
             "total_runtime": total_runtime,
             "individual_results": individual_results,
