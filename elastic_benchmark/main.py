@@ -11,10 +11,15 @@ class ElasticSearchClient(object):
     def __init__(self):
         self.client = Elasticsearch()
 
-    def index(self, run_type, **kwargs):
-        self.client.index(
-            index="{0}-benchmark-index".format(run_type),
-            doc_type='results', body=kwargs)
+    def index(self, scenario_name, run_at, total_runtime, individual_results,
+              average_action_time, average_action_success, **kwargs):
+        kwargs.update({
+            "run_at": run_at,
+            "total_runtime": total_runtime,
+            "individual_results": individual_results,
+            "average_action_time": average_action_time,
+            "average_action_success": average_action_success})
+        self.client.index(index=scenario_name, doc_type='results', body=kwargs)
 
 
 def parse_pkb_output(output):
@@ -30,14 +35,43 @@ def parse_pkb_output(output):
         for o in json_outputs]
     num_servers = [o.get("metadata").get("vm_count") for o in json_outputs
                    if o.get("metric") == "End to End Runtime"][0]
-    total_time = [o.get("value") for o in json_outputs
+    total_runtime = [o.get("value") for o in json_outputs
                    if o.get("metric") == "End to End Runtime"][0]
-    avg_runtime = total_time / num_servers
+    average_action_time = total_time / num_servers
     timestamp = [o.get("timestamp") for o in json_outputs
                    if o.get("metric") == "End to End Runtime"][0]
-    return [{"action": "create", "num_servers": num_servers,
-             "total_time": total_time, "avg_runtime": avg_runtime,
-             "timestamp": str(datetime.datetime.fromtimestamp(int(timestamp)))}]
+    average_action_success = 100 # pkb doesn't seem to want to report failures
+    individual_results = [
+        {"resource_name": "server", "action_time": total_runtime,
+         "was_successful": True} for count in range(num_servers)]
+    return [{"scenario_name": "create_server_pkb",
+             "total_runtime": total_runtime,
+             "individual_results": individual_results
+             "average_action_time": average_action_time,
+             "average_action_success": average_action_success,
+             "run_at": str(datetime.datetime.fromtimestamp(int(timestamp)))}]
+
+def parse_rally_output(output):
+    json_outputs = json.loads(output)
+    return_data = []
+    for o in json_output:
+        # direct access but should always have at least one result right?
+        run_at = o.get("result")[0].get("timestamp")
+        total_runtime = o.get("full_duration")
+        individual_results = []
+        duration_list = [r.get("duration") for r in o.get("result")]
+        average_action_time = sum(duration_list) / len(duration_list)
+        success_list = [True for r in o.get("result")
+                        if len(r.get("error")) > 0]
+        average_action_succes = sum(success_list) / len(duration_list)
+        return_data.append({
+            "run_at": run_at,
+            "total_runtime": total_runtime,
+            "individual_results": individual_results,
+            "average_action_time": average_action_time,
+            "average_action_success": average_action_success})
+    return return_data
+
 
 
 class ArgumentParser(argparse.ArgumentParser):
