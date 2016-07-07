@@ -46,7 +46,7 @@ def parse_pkb_output(output):
          "was_successful": True} for count in range(num_servers)]
     return [{"scenario_name": "create_server_pkb",
              "total_runtime": total_runtime,
-             "individual_results": individual_results
+             "individual_results": individual_results,
              "average_action_time": average_action_time,
              "average_action_success": average_action_success,
              "run_at": str(datetime.datetime.fromtimestamp(int(timestamp)))}]
