@@ -37,7 +37,7 @@ def parse_pkb_output(output):
                    if o.get("metric") == "End to End Runtime"][0]
     total_runtime = [o.get("value") for o in json_outputs
                    if o.get("metric") == "End to End Runtime"][0]
-    average_action_time = total_time / num_servers
+    average_action_time = total_runtime / num_servers
     timestamp = [o.get("timestamp") for o in json_outputs
                    if o.get("metric") == "End to End Runtime"][0]
     average_action_success = 100 # pkb doesn't seem to want to report failures
