@@ -101,4 +101,4 @@ def entry_point():
     output = func(cl_args.input.read())
     esc = ElasticSearchClient()
     for line in output:
-        esc.index(run_type=cl_args.type, **output)
+        esc.index(run_type=cl_args.type, **line)
