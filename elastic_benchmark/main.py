@@ -114,7 +114,7 @@ def parse_rally_output(output):
         average_action_time = sum(duration_list) / len(duration_list)
         success_list = [True for r in o.get("result")
                         if len(r.get("error")) > 0]
-        average_action_succes = sum(success_list) / len(duration_list)
+        average_action_success = sum(success_list) / len(duration_list)
         return_data.append({
             "scenario_name": scenario_name,
             "run_at": run_at,
