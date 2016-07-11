@@ -102,7 +102,7 @@ def parse_tempest_output(output):
 
 
 def parse_rally_output(output):
-    json_outputs = json.loads(output)
+    json_output = json.loads(output)
     return_data = []
     for o in json_output:
         scenario_name = o.get("key").get("name")
