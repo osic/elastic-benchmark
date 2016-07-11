@@ -42,7 +42,7 @@ def parse_pkb_output(output):
                    if o.get("metric") == "End to End Runtime"][0]
     average_action_success = 100 # pkb doesn't seem to want to report failures
     individual_results = [
-        {"resource_name": "server", "action_time": total_runtime,
+        {"action_name": "server", "action_time": total_runtime,
          "was_successful": True} for count in range(num_servers)]
     return [{"scenario_name": "create_server_pkb",
              "total_runtime": total_runtime,
@@ -50,6 +50,56 @@ def parse_pkb_output(output):
              "average_action_time": average_action_time,
              "average_action_success": average_action_success,
              "run_at": str(datetime.datetime.fromtimestamp(int(timestamp)))}]
+
+
+def parse_tempest_output(output):
+    csv_results = output.splitlines()[1:]
+
+    results = []
+    for row in csv_results:
+        irow = row.split(',')
+
+        # Skip the row if it's skipped
+        if irow[1] == 'skip':
+            continue
+
+        # Ignore the test id, take only the test method name
+        scenario_name = irow[0].split('[')[0].split('.')[-2]
+        action_name = irow[0].split('[')[0].split('.')[-1]
+        start_time = dateutil.parser.parse(irow[2])
+        run_at = start_time.strftime("%Y-%m-%dT%H:%M:%S%z")
+        stop_time = dateutil.parser.parse(irow[3])
+        run_time = (stop_time - start_time).seconds
+
+        # Determine if the scenario already exists
+        existing = True in [True if r.get('scenario_name') == scenario_name else False
+                            for r in results]
+        if existing:
+            for r in results:
+                if r.get('scenario_name') == scenario_name:
+                    if r.get('run_at') > run_at:
+                        r['run_at'] = run_at
+                    r['total_runtime'] = r.get('total_runtime', 0) + run_time
+                    r['individual_results'].append({
+                        'action_name': action_name, 'action_time': run_time,
+                        'was_successful': irow[1]})
+                    r['average_action_time'] = sum([ir.get('action_time') for ir in r.get(
+                        'individual_results')]) / len(r.get('individual_results'))
+                    r['average_action_success'] = sum([
+                        1 if ir.get('was_successful') == 'success' else 0 for ir in r.get(
+                        'individual_results')]) / len(r.get('individual_results'))
+        else:
+            results.append({
+                'scenario_name': scenario_name,
+                'run_at': run_at,
+                'total_runtime': run_time,
+                'individual_results': [{
+                    'action_name': action_name, 'action_time': run_time,
+                    'was_successful': irow[1]}],
+                'average_action_time': run_time,
+                'average_action_success': 1 if irow[1] == 'success' else 0})
+    return results
+
 
 def parse_rally_output(output):
     json_outputs = json.loads(output)
@@ -73,7 +123,6 @@ def parse_rally_output(output):
             "average_action_time": average_action_time,
             "average_action_success": average_action_success})
     return return_data
-
 
 
 class ArgumentParser(argparse.ArgumentParser):
