@@ -19,7 +19,7 @@ class ElasticSearchClient(object):
             "individual_results": individual_results,
             "average_action_time": average_action_time,
             "average_action_success": average_action_success})
-        self.client.index(index=scenario_name, doc_type='results', body=kwargs)
+        self.client.index(index=scenario_name.lower(), doc_type='results', body=kwargs)
 
 
 def parse_pkb_output(output):
