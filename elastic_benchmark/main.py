@@ -50,7 +50,7 @@ def parse_pkb_output(output):
              "individual_results": individual_results,
              "average_action_time": average_action_time,
              "average_action_success": average_action_success,
-             "run_at": str(datetime.datetime.fromtimestamp(int(timestamp)))}]
+             "run_at": datetime.datetime.fromtimestamp(int(timestamp)).strftime("%Y-%m-%dT%H:%M:%S%z")}]
 
 
 def parse_tempest_output(output):
