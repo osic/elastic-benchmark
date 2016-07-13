@@ -118,7 +118,7 @@ def parse_rally_output(output):
         average_action_success = sum(success_list) / len(duration_list)
         return_data.append({
             "scenario_name": scenario_name,
-            "run_at": str(datetime.datetime.fromtimestamp(int(run_at))),
+            "run_at": datetime.datetime.fromtimestamp(int(run_at)).strftime("%Y-%m-%dT%H:%M:%S%z"),
             "total_runtime": total_runtime,
             "individual_results": individual_results,
             "average_action_time": average_action_time,
