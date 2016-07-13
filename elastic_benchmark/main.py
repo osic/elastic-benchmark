@@ -1,6 +1,6 @@
 import argparse
 import datetime
-import dateutil
+import dateutil.parser
 import json
 import re
 import sys
