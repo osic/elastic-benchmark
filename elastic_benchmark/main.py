@@ -142,7 +142,7 @@ class ArgumentParser(argparse.ArgumentParser):
             help="The benchmarking tool used (ex. pkb, tempest, rally).")
 
         self.add_argument(
-            "-l", "--logs" metavar="<log link>",
+            "-l", "--logs", metavar="<log link>",
             required=False, default=None, help="A link to the logs.")
 
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
