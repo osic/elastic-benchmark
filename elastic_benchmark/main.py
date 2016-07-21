@@ -141,6 +141,10 @@ class ArgumentParser(argparse.ArgumentParser):
             required=True, default=None, choices=['pkb', 'tempest', 'rally'],
             help="The benchmarking tool used (ex. pkb, tempest, rally).")
 
+        self.add_argument(
+            "-l", "--logs" metavar="<log link>",
+            required=False, default=None, help="A link to the logs.")
+
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
                           default=sys.stdin)
 
@@ -151,4 +155,4 @@ def entry_point():
     output = func(cl_args.input.read())
     esc = ElasticSearchClient()
     for line in output:
-        esc.index(run_type=cl_args.type, **line)
+        esc.index(run_type=cl_args.type, logs=cl_args.logs **line)
