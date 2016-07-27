@@ -38,12 +38,14 @@ def parse_pkb_output(output):
                    if o.get("metric") == "End to End Runtime"][0]
     timestamp = [o.get("timestamp") for o in json_outputs
                    if o.get("metric") == "End to End Runtime"][0]
+    total_runtime = [o.get("value") for o in json_outputs
+                   if o.get("metric") == "End to End Runtime"][0]
     return_data = []
     run_id = str(uuid.uuid4())
     for i in xrange(num_servers):
         return_data.append({
-            "scenario_name": scenario_name,
-            "run_id": run_id
+            "scenario_name": "create_server_pkb",
+            "run_id": run_id,
             "run_at": datetime.datetime.fromtimestamp(int(timestamp)).strftime("%Y-%m-%dT%H:%M:%S%z"),
             "runtime": total_runtime / num_servers,
             "result": "pass"})
@@ -76,7 +78,7 @@ def parse_tempest_output(output):
             "scenario_name": scenario_name,
             "action_name": action_name,
             "run_id": run_id,
-            "run_at" = run_at,
+            "run_at": run_at,
             "runtime": run_time,
             "result": "pass" if irow[1] == "success" else "fail"})
     return results
@@ -94,7 +96,7 @@ def parse_rally_output(output):
             result = 'pass' if len(ir.get('error')) == 0 else 'fail'
             return_data.append({
                 "scenario_name": scenario_name,
-                "run_id": run_id
+                "run_id": run_id,
                 "run_at": datetime.datetime.fromtimestamp(int(run_at)).strftime("%Y-%m-%dT%H:%M:%S%z"),
                 "runtime": duration,
                 "result": result})
