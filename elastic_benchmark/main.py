@@ -64,8 +64,8 @@ def parse_pkb_output(output):
             "scenario": "create_server_pkb",
             "run_id": run_id,
             "timestamp": dic.get("timestamp"),
-            "success_percentage": dic.get("passes") / dic.get("count"),
-            "avg_runtime": sum(dic.get("runtime")) / dic.get("count"),
+            "success_percentage": float(dic.get("passes")) / float(dic.get("count")),
+            "avg_runtime": float(sum(dic.get("runtime"))) / float(dic.get("count")),
             "action_count": dic.get("count")})
     return return_data
 
@@ -121,8 +121,8 @@ def parse_tempest_output(output):
             "scenario": dic.get("scenario"),
             "run_id": run_id,
             "timestamp": dic.get("timestamp"),
-            "success_percentage": dic.get("passes") / dic.get("count"),
-            "avg_runtime": sum(dic.get("runtime")) / dic.get("count"),
+            "success_percentage": float(dic.get("passes")) / float(dic.get("count")),
+            "avg_runtime": float(sum(dic.get("runtime"))) / float(dic.get("count")),
             "action_count": dic.get("count")})
     return results
 
@@ -165,8 +165,8 @@ def parse_rally_output(output):
             "scenario": dic.get("scenario"),
             "run_id": run_id,
             "timestamp": dic.get("timestamp"),
-            "success_percentage": dic.get("passes") / dic.get("count"),
-            "avg_runtime": sum(dic.get("runtime")) / dic.get("count"),
+            "success_percentage": float(dic.get("passes")) / float(dic.get("count")),
+            "avg_runtime": float(sum(dic.get("runtime"))) / float(dic.get("count")),
             "action_count": dic.get("count")})
     return return_data
 
