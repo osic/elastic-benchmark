@@ -49,6 +49,29 @@ def parse_pkb_output(output):
             "run_at": datetime.datetime.fromtimestamp(int(timestamp)).strftime("%Y-%m-%dT%H:%M:%S%z"),
             "runtime": total_runtime / num_servers,
             "result": "pass"})
+    agg = {}
+    for item in return_data:
+        run_id = item.get("run_id")
+        if run_id in agg.keys():
+            runtime = agg.get(run_id).get("runtime")
+            runtime.append(item.get("runtime"))
+            agg.get(run_id).update({
+                "passes": agg.get(run_id).get("passes") + 1,
+                "count": agg.get(run_id).get("count") + 1,
+                "runtime": runtime})
+        else:
+            agg.update({item.get("run_id"): {
+                "passes": 1, "count": 1, "timestamp": item.get("run_at"),
+                "runtime": [item.get("runtime")]}})
+    for run_id, dic in agg.items():
+        return_data.append({
+            "scenario_name": "aggregated_results",
+            "scenario": "create_server_pkb",
+            "run_id": run_id,
+            "timestamp": dic.get("timestamp"),
+            "success_percentage": dic.get("passes") / dic.get("count"),
+            "avg_runtime": sum(dic.get("runtime")) / dic.get("count"),
+            "action_count": dic.get("count")})
     return return_data
 
 
@@ -81,6 +104,31 @@ def parse_tempest_output(output):
             "run_at": run_at,
             "runtime": run_time,
             "result": "pass" if irow[1] == "success" else "fail"})
+
+    agg = {}
+    for item in results:
+        run_id = item.get("run_id")
+        if run_id in agg.keys():
+            agg.get(run_id).get("runtime").append(item.get("runtime"))
+            result = 1 if item.get("result") == "pass" else 0
+            agg.get(run_id).update({
+                "passes": agg.get(run_id).get("passes") + result,
+                "count": agg.get(run_id).get("count") + 1})
+        else:
+            agg.update({item.get("run_id"): {
+                "passes": 1 if item.get("result") == "pass" else 0,
+                "scenario": item.get("scenario_name"),
+                "count": 1, "timestamp": item.get("run_at"),
+                "runtime": [item.get("runtime")]}})
+    for run_id, dic in agg.items():
+        results.append({
+            "scenario_name": "aggregated_results",
+            "scenario": dic.get("scenario"),
+            "run_id": run_id,
+            "timestamp": dic.get("timestamp"),
+            "success_percentage": dic.get("passes") / dic.get("count"),
+            "avg_runtime": sum(dic.get("runtime")) / dic.get("count"),
+            "action_count": dic.get("count")})
     return results
 
 
@@ -100,6 +148,31 @@ def parse_rally_output(output):
                 "run_at": datetime.datetime.fromtimestamp(int(run_at)).strftime("%Y-%m-%dT%H:%M:%S%z"),
                 "runtime": duration,
                 "result": result})
+
+    agg = {}
+    for item in return_data:
+        run_id = item.get("run_id")
+        if run_id in agg.keys():
+            agg.get(run_id).get("runtime").append(item.get("runtime"))
+            result = 1 if item.get("result") == "pass" else 0
+            agg.get(run_id).update({
+                "passes": agg.get(run_id).get("passes") + result,
+                "count": agg.get(run_id).get("count") + 1})
+        else:
+            agg.update({item.get("run_id"): {
+                "passes": 1 if item.get("result") == "pass" else 0,
+                "scenario": item.get("scenario_name"),
+                "count": 1, "timestamp": item.get("run_at"),
+                "runtime": [item.get("runtime")]}})
+    for run_id, dic in agg.items():
+        return_data.append({
+            "scenario_name": "aggregated_results",
+            "scenario": dic.get("scenario"),
+            "run_id": run_id,
+            "timestamp": dic.get("timestamp"),
+            "success_percentage": dic.get("passes") / dic.get("count"),
+            "avg_runtime": sum(dic.get("runtime")) / dic.get("count"),
+            "action_count": dic.get("count")})
     return return_data
 
 
