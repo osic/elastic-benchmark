@@ -13,12 +13,7 @@ class ElasticSearchClient(object):
     def __init__(self):
         self.client = Elasticsearch()
 
-    def index(self, scenario_name, run_id, run_at, runtime, result, **kwargs):
-        kwargs.update({
-            "run_id": run_id,
-            "run_at": run_at,
-            "runtime": runtime,
-            "result": result})
+    def index(self, scenario_name, **kwargs):
         self.client.index(
             index=scenario_name.lower()+"_new_schema", doc_type='results', body=kwargs)
 
