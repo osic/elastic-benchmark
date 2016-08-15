@@ -20,4 +20,5 @@ setup(
     ),
     entry_points={
         'console_scripts': [
-            'elastic-benchmark = elastic_benchmark.main:entry_point']})
+            'elastic-benchmark = elastic_benchmark.main:entry_point',
+            'elastic-upgrade = elastic_benchmark.upgrade:entry_point']})

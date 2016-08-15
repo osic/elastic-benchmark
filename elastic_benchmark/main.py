@@ -15,7 +15,7 @@ class ElasticSearchClient(object):
 
     def index(self, scenario_name, **kwargs):
         self.client.index(
-            index=scenario_name.lower()+"_new_schema", doc_type='results', body=kwargs)
+            index=scenario_name.lower(), doc_type='results', body=kwargs)
 
 
 def parse_pkb_output(output):
@@ -39,7 +39,7 @@ def parse_pkb_output(output):
     run_id = str(uuid.uuid4())
     for i in xrange(num_servers):
         return_data.append({
-            "scenario_name": "create_server_pkb",
+            "scenario_name": "create_server_pkb_new_schema",
             "run_id": run_id,
             "run_at": datetime.datetime.fromtimestamp(int(timestamp)).strftime("%Y-%m-%dT%H:%M:%S%z"),
             "runtime": total_runtime / num_servers,
@@ -60,7 +60,7 @@ def parse_pkb_output(output):
                 "runtime": [item.get("runtime")]}})
     for run_id, dic in agg.items():
         return_data.append({
-            "scenario_name": "aggregated_results",
+            "scenario_name": "aggregated_results_new_schema",
             "scenario": "create_server_pkb",
             "run_id": run_id,
             "timestamp": dic.get("timestamp"),
@@ -93,7 +93,7 @@ def parse_tempest_output(output):
         run_id = run_id[0].get("run_id") if len(run_id) > 0 else str(uuid.uuid4())
 
         results.append({
-            "scenario_name": scenario_name,
+            "scenario_name": scenario_name+"_new_schema",
             "action_name": action_name,
             "run_id": run_id,
             "run_at": run_at,
@@ -117,7 +117,7 @@ def parse_tempest_output(output):
                 "runtime": [item.get("runtime")]}})
     for run_id, dic in agg.items():
         results.append({
-            "scenario_name": "aggregated_results",
+            "scenario_name": "aggregated_results_new_schema",
             "scenario": dic.get("scenario"),
             "run_id": run_id,
             "timestamp": dic.get("timestamp"),
@@ -138,7 +138,7 @@ def parse_rally_output(output):
             duration = ir.get('duration')
             result = 'pass' if len(ir.get('error')) == 0 else 'fail'
             return_data.append({
-                "scenario_name": scenario_name,
+                "scenario_name": scenario_name+"_new_schema",
                 "run_id": run_id,
                 "run_at": datetime.datetime.fromtimestamp(int(run_at)).strftime("%Y-%m-%dT%H:%M:%S%z"),
                 "runtime": duration,
@@ -161,7 +161,7 @@ def parse_rally_output(output):
                 "runtime": [item.get("runtime")]}})
     for run_id, dic in agg.items():
         return_data.append({
-            "scenario_name": "aggregated_results",
+            "scenario_name": "aggregated_results_new_schema",
             "scenario": dic.get("scenario"),
             "run_id": run_id,
             "timestamp": dic.get("timestamp"),
