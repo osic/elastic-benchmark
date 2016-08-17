@@ -1,2 +1,4 @@
 elasticsearch
 python-dateutil
+testtools
+python-subunit

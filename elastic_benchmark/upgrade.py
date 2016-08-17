@@ -1,5 +1,10 @@
 import argparse
+import collections
+import io
 import re
+
+import subunit
+import testtools
 
 from elastic_benchmark.main import ElasticSearchClient
 
@@ -82,10 +87,28 @@ class SubunitParser(testtools.TestResult):
         self.tests.update({output: "failure"})
 
     def stopTestRun(self):
-        super(UrlParser, self).stopTestRun()
+        super(SubunitParser, self).stopTestRun()
 
     def startTestRun(self):
-        super(UrlParser, self).startTestRun()
+        super(SubunitParser, self).startTestRun()
+
+
+class FileAccumulator(testtools.StreamResult):
+
+    def __init__(self, non_subunit_name='pythonlogging'):
+        super(FileAccumulator, self).__init__()
+        self.route_codes = collections.defaultdict(io.BytesIO)
+        self.non_subunit_name = non_subunit_name
+
+    def status(self, **kwargs):
+        if kwargs.get('file_name') != self.non_subunit_name:
+            return
+        file_bytes = kwargs.get('file_bytes')
+        if not file_bytes:
+            return
+        route_code = kwargs.get('route_code')
+        stream = self.route_codes[route_code]
+        stream.write(file_bytes)
 
 
 class ArgumentParser(argparse.ArgumentParser):
