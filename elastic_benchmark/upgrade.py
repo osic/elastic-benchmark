@@ -53,6 +53,12 @@ def parse_differences(before, after):
             "after_failures_total": after.failure + after.error}
 
 
+def parse_uptime(output):
+    data = json.loads(open(output).read())
+
+    return {"{0}_uptime".format(k): v.get("uptime_pct") for k, v in data.items()}
+
+
 class SubunitParser(testtools.TestResult):
     def __init__(self):
         super(SubunitParser, self).__init__()
@@ -134,6 +140,10 @@ def __init__(self):
         required=False, default=None, help="A link to the console output from the upgrade.")
 
     self.add_argument(
+        "-u", "--uptime", metavar="<uptime output>",
+        required=True, default=None, help="A link to the uptime output from the upgrade.")
+
+    self.add_argument(
         "-l", "--logs", metavar="<log link>",
         required=False, default=None, help="A link to the logs.")
 
@@ -168,4 +178,5 @@ def entry_point():
     before = parse(cl_args.before)
     after = parse(cl_args.after)
     differences = parse_differences(before, after)
+    differences.update(parse_uptime(cl_args.uptime))
     esc.index(scenario_name="upgrade", **differences)
