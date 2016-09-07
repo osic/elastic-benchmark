@@ -131,7 +131,7 @@ def parse_rally_output(output):
     json_output = json.loads(output)
     return_data = []
     for o in json_output:
-        scenario_name = o.get("key").get("name")
+        scenario_name = o.get("key").get("kw").get("args").get("alternate_name") or o.get("key").get("name")
         run_id = str(uuid.uuid4())
         for ir in o.get('result'):
             run_at = ir.get('timestamp')
@@ -142,6 +142,7 @@ def parse_rally_output(output):
                 "run_id": run_id,
                 "run_at": datetime.datetime.fromtimestamp(int(run_at)).strftime("%Y-%m-%dT%H:%M:%S%z"),
                 "runtime": duration,
+                "atomic_actions": ir.get("atomic_actions"),
                 "result": result})
 
     agg = {}
@@ -149,6 +150,7 @@ def parse_rally_output(output):
         run_id = item.get("run_id")
         if run_id in agg.keys():
             agg.get(run_id).get("runtime").append(item.get("runtime"))
+            agg.get(run_id).get("atomic_actions").append(item.get("atomic_actions"))
             result = 1 if item.get("result") == "pass" else 0
             agg.get(run_id).update({
                 "passes": agg.get(run_id).get("passes") + result,
@@ -158,8 +160,12 @@ def parse_rally_output(output):
                 "passes": 1 if item.get("result") == "pass" else 0,
                 "scenario": item.get("scenario_name"),
                 "count": 1, "timestamp": item.get("run_at"),
-                "runtime": [item.get("runtime")]}})
+                "runtime": [item.get("runtime")],
+                "atomic_actions": [item.get("atomic_actions")]}})
     for run_id, dic in agg.items():
+        atomic_actions = {k: {"min": min(v), "max": max(v), "avg": sum(v)/len(v)}
+                          for k, v in {ok: [float(i.get(ok)) for i in dic.get("atomic_actions")]
+                          for key in set().union(*(d.keys() for d in dic.get("atomic_actions")))}.items()}
         return_data.append({
             "scenario_name": "aggregated_results_new_schema",
             "scenario": dic.get("scenario"),
@@ -167,7 +173,8 @@ def parse_rally_output(output):
             "timestamp": dic.get("timestamp"),
             "success_percentage": float(dic.get("passes")) / float(dic.get("count")),
             "avg_runtime": float(sum(dic.get("runtime"))) / float(dic.get("count")),
-            "action_count": dic.get("count")})
+            "action_count": dic.get("count"),
+            "atomic_actions": atomic_actions})
     return return_data
 
 
