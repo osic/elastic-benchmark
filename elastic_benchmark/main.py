@@ -137,7 +137,6 @@ def parse_rally_output(output):
             run_at = ir.get('timestamp')
             duration = ir.get('duration')
             result = 'pass' if len(ir.get('error')) == 0 else 'fail'
-            atomic_actions =
             return_data.append({
                 "scenario_name": scenario_name+"_new_schema",
                 "run_id": run_id,
