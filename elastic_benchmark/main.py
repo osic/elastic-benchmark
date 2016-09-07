@@ -164,8 +164,8 @@ def parse_rally_output(output):
                 "atomic_actions": [item.get("atomic_actions")]}})
     for run_id, dic in agg.items():
         atomic_actions = {k: {"min": min(v), "max": max(v), "avg": sum(v)/len(v)}
-                          for k, v in {ok: [float(i.get(ok)) for i in dic.get("atomic_actions")]
-                          for key in set().union(*(d.keys() for d in dic.get("atomic_actions")))}.items()}
+                          for k, v in {ok: [float(i.get(ok)) for i in dic.get("atomic_actions") if i.get(ok) <> None]
+                          for ok in set().union(*(d.keys() for d in dic.get("atomic_actions")))}.items()}
         return_data.append({
             "scenario_name": "aggregated_results_new_schema",
             "scenario": dic.get("scenario"),
