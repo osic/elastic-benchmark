@@ -169,7 +169,7 @@ class ArgumentParser(argparse.ArgumentParser):
             suite.run(subunit_parser)
         result.stopTestRun()
 
-    return subunit_parser
+        return subunit_parser
 
 
     def entry_point():
