@@ -173,6 +173,7 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 
 def entry_point():
+    print "here"
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
     before = parse(cl_args.before)
