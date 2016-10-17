@@ -121,7 +121,7 @@ class FileAccumulator(testtools.StreamResult):
 class ArgumentParser(argparse.ArgumentParser):
     def __init__(self):
         desc = "Parses data from an upgrade and inserts into ElasticSearch."
-        usage_string = "elastic-upgrade [-b/--before] [-a/--after] [-c/--console] [-l/--logs]"
+        usage_string = "elastic-upgrade [-b/--before] [-a/--after] [-c/--console] [-l/--logs] [-u/--uptime]"
 
         super(ArgumentParser, self).__init__(
             usage=usage_string, description=desc)
