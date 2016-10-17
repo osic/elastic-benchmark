@@ -118,65 +118,65 @@ class FileAccumulator(testtools.StreamResult):
 
 
 class ArgumentParser(argparse.ArgumentParser):
-def __init__(self):
-    desc = "Parses data from an upgrade and inserts into ElasticSearch."
-    usage_string = "elastic-upgrade [-b/--before] [-a/--after] [-c/--console] [-l/--logs]"
+    def __init__(self):
+        desc = "Parses data from an upgrade and inserts into ElasticSearch."
+        usage_string = "elastic-upgrade [-b/--before] [-a/--after] [-c/--console] [-l/--logs]"
 
-    super(ArgumentParser, self).__init__(
-        usage=usage_string, description=desc)
+        super(ArgumentParser, self).__init__(
+            usage=usage_string, description=desc)
 
-    self.prog = "Argument Parser"
+        self.prog = "Argument Parser"
 
-    self.add_argument(
-        "-b", "--before", metavar="<before subunit>",
-        required=True, default=None, help="A link to the subunit from the run before the upgrade.")
+        self.add_argument(
+            "-b", "--before", metavar="<before subunit>",
+            required=True, default=None, help="A link to the subunit from the run before the upgrade.")
 
-    self.add_argument(
-        "-a", "--after", metavar="<after subunit>",
-        required=True, default=None, help="A link to the subunit from the run after the upgrade.")
+        self.add_argument(
+            "-a", "--after", metavar="<after subunit>",
+            required=True, default=None, help="A link to the subunit from the run after the upgrade.")
 
-    self.add_argument(
-        "-c", "--console", metavar="<console output>",
-        required=False, default=None, help="A link to the console output from the upgrade.")
+        self.add_argument(
+            "-c", "--console", metavar="<console output>",
+            required=False, default=None, help="A link to the console output from the upgrade.")
 
-    self.add_argument(
-        "-u", "--uptime", metavar="<uptime output>",
-        required=True, default=None, help="A link to the uptime output from the upgrade.")
+        self.add_argument(
+            "-u", "--uptime", metavar="<uptime output>",
+            required=True, default=None, help="A link to the uptime output from the upgrade.")
 
-    self.add_argument(
-        "-l", "--logs", metavar="<log link>",
-        required=False, default=None, help="A link to the logs.")
+        self.add_argument(
+            "-l", "--logs", metavar="<log link>",
+            required=False, default=None, help="A link to the logs.")
 
-    self.add_argument('input', nargs='?', type=argparse.FileType('r'),
-                      default=sys.stdin)
+        self.add_argument('input', nargs='?', type=argparse.FileType('r'),
+                          default=sys.stdin)
 
 
-def parse(subunit_file, non_subunit_name="pythonlogging"):
-    subunit_parser = SubunitParser()
-    stream = open(subunit_file, 'rb')
-    suite = subunit.ByteStreamToStreamResult(
-      stream, non_subunit_name=non_subunit_name)
-    result = testtools.StreamToExtendedDecorator(subunit_parser)
-    accumulator = FileAccumulator(non_subunit_name)
-    result = testtools.StreamResultRouter(result)
-    result.add_rule(accumulator, 'test_id', test_id=None)
-    result.startTestRun()
-    suite.run(result)
+    def parse(subunit_file, non_subunit_name="pythonlogging"):
+        subunit_parser = SubunitParser()
+        stream = open(subunit_file, 'rb')
+        suite = subunit.ByteStreamToStreamResult(
+          stream, non_subunit_name=non_subunit_name)
+        result = testtools.StreamToExtendedDecorator(subunit_parser)
+        accumulator = FileAccumulator(non_subunit_name)
+        result = testtools.StreamResultRouter(result)
+        result.add_rule(accumulator, 'test_id', test_id=None)
+        result.startTestRun()
+        suite.run(result)
 
-    for bytes_io in accumulator.route_codes.values():  # v1 processing
-        bytes_io.seek(0)
-        suite = subunit.ProtocolTestCase(bytes_io)
-        suite.run(subunit_parser)
-    result.stopTestRun()
+        for bytes_io in accumulator.route_codes.values():  # v1 processing
+            bytes_io.seek(0)
+            suite = subunit.ProtocolTestCase(bytes_io)
+            suite.run(subunit_parser)
+        result.stopTestRun()
 
     return subunit_parser
 
 
-def entry_point():
-    cl_args = ArgumentParser().parse_args()
-    esc = ElasticSearchClient()
-    before = parse(cl_args.before)
-    after = parse(cl_args.after)
-    differences = parse_differences(before, after)
-    differences.update(parse_uptime(cl_args.uptime))
-    esc.index(scenario_name="upgrade", **differences)
+    def entry_point():
+        cl_args = ArgumentParser().parse_args()
+        esc = ElasticSearchClient()
+        before = parse(cl_args.before)
+        after = parse(cl_args.after)
+        differences = parse_differences(before, after)
+        differences.update(parse_uptime(cl_args.uptime))
+        esc.index(scenario_name="upgrade", **differences)
