@@ -152,25 +152,25 @@ class ArgumentParser(argparse.ArgumentParser):
                           default=sys.stdin)
 
 
-    def parse(subunit_file, non_subunit_name="pythonlogging"):
-        subunit_parser = SubunitParser()
-        stream = open(subunit_file, 'rb')
-        suite = subunit.ByteStreamToStreamResult(
-          stream, non_subunit_name=non_subunit_name)
-        result = testtools.StreamToExtendedDecorator(subunit_parser)
-        accumulator = FileAccumulator(non_subunit_name)
-        result = testtools.StreamResultRouter(result)
-        result.add_rule(accumulator, 'test_id', test_id=None)
-        result.startTestRun()
-        suite.run(result)
+def parse(subunit_file, non_subunit_name="pythonlogging"):
+    subunit_parser = SubunitParser()
+    stream = open(subunit_file, 'rb')
+    suite = subunit.ByteStreamToStreamResult(
+      stream, non_subunit_name=non_subunit_name)
+    result = testtools.StreamToExtendedDecorator(subunit_parser)
+    accumulator = FileAccumulator(non_subunit_name)
+    result = testtools.StreamResultRouter(result)
+    result.add_rule(accumulator, 'test_id', test_id=None)
+    result.startTestRun()
+    suite.run(result)
 
-        for bytes_io in accumulator.route_codes.values():  # v1 processing
-            bytes_io.seek(0)
-            suite = subunit.ProtocolTestCase(bytes_io)
-            suite.run(subunit_parser)
-        result.stopTestRun()
+    for bytes_io in accumulator.route_codes.values():  # v1 processing
+        bytes_io.seek(0)
+        suite = subunit.ProtocolTestCase(bytes_io)
+        suite.run(subunit_parser)
+    result.stopTestRun()
 
-        return subunit_parser
+    return subunit_parser
 
 
 def entry_point():
