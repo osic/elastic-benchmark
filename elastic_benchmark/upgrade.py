@@ -2,6 +2,7 @@ import argparse
 import collections
 import io
 import re
+import sys
 
 import subunit
 import testtools
