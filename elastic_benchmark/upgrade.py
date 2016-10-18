@@ -4,6 +4,7 @@ import io
 import re
 import sys
 import json
+from datetime import datetime
 
 import subunit
 import testtools
@@ -181,5 +182,6 @@ def entry_point():
     #after = parse(cl_args.after)
     #differences = parse_differences(before, after)
     differences = parse_uptime(cl_args.uptime)
+    differences.append(str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
     print differences
-    esc.index(scenario_name='test_upgrade', env='osa_onmetal', **differences)
+    #esc.index(scenario_name='test_upgrade', env='osa_onmetal', **differences)
