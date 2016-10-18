@@ -182,4 +182,4 @@ def entry_point():
     #differences = parse_differences(before, after)
     differences = parse_uptime(cl_args.uptime)
     print differences
-    esc.index(index='test_upgrade', doc_type='results', body=differences)
+    esc.index(scenario_name='test_upgrade', env='osa_onmetal', **differences)
