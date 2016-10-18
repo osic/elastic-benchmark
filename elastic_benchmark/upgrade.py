@@ -68,7 +68,7 @@ def parse_during(output):
 
 def parse_persistence(output):
     data = json.loads(open(output).read())
-
+    print {"{0}_persistence".format(k): v.get("uptime_pct") for k, v in data.items()}
     return {"{0}_persistence".format(k): v.get("uptime_pct") for k, v in data.items()}
 
 class SubunitParser(testtools.TestResult):
@@ -200,5 +200,6 @@ def entry_point():
     #differences = parse_differences(before, after)
     differences = parse_during(cl_args.during)
     current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
+    differences = parse_persistence(cl_args.persistence)
     differences.update({"done_time": current_time})
-    esc.index(scenario_name='test_upgrade3', env='osa_onmetal', **differences)
+    #esc.index(scenario_name='test_upgrade3', env='osa_onmetal', **differences)
