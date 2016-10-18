@@ -179,5 +179,5 @@ def entry_point():
     #before = parse(cl_args.before)
     #after = parse(cl_args.after)
     #differences = parse_differences(before, after)
-    differences.update(parse_uptime(cl_args.uptime))
+    differences = parse_uptime(cl_args.uptime)
     esc.index(scenario_name="upgrade", **differences)
