@@ -66,6 +66,11 @@ def parse_during(output):
 
     return {"{0}_during".format(k): v.get("uptime_pct") for k, v in data.items()}
 
+def parse_persistence(output):
+    data = json.loads(open(output).read())
+
+    return {"{0}_persistence".format(k): v.get("uptime_pct") for k, v in data.items()}
+
 class SubunitParser(testtools.TestResult):
     def __init__(self):
         super(SubunitParser, self).__init__()
