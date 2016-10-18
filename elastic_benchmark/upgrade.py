@@ -182,6 +182,7 @@ def entry_point():
     #after = parse(cl_args.after)
     #differences = parse_differences(before, after)
     differences = parse_uptime(cl_args.uptime)
-    differences.update(str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")))
+    current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
+    differences.update(current_time)
     print differences
     #esc.index(scenario_name='test_upgrade', env='osa_onmetal', **differences)
