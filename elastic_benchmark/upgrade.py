@@ -130,11 +130,11 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "-b", "--before", metavar="<before subunit>",
-            required=True, default=None, help="A link to the subunit from the run before the upgrade.")
+            required=False, default=None, help="A link to the subunit from the run before the upgrade.")
 
         self.add_argument(
             "-a", "--after", metavar="<after subunit>",
-            required=True, default=None, help="A link to the subunit from the run after the upgrade.")
+            required=False, default=None, help="A link to the subunit from the run after the upgrade.")
 
         self.add_argument(
             "-c", "--console", metavar="<console output>",
@@ -176,8 +176,8 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 def entry_point():
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
-    before = parse(cl_args.before)
-    after = parse(cl_args.after)
-    differences = parse_differences(before, after)
+    #before = parse(cl_args.before)
+    #after = parse(cl_args.after)
+    #differences = parse_differences(before, after)
     differences.update(parse_uptime(cl_args.uptime))
     esc.index(scenario_name="upgrade", **differences)
