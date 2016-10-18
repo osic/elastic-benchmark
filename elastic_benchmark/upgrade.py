@@ -59,7 +59,7 @@ def parse_differences(before, after):
 def parse_uptime(output):
     data = json.loads(open(output).read())
 
-    return {"{0}_uptime".format(k): v.get("create") for k, v in data.items()}
+    return {"{0}_uptime".format(k): v.get("uptime_pct") for k, v in data.items()}
 
 def parse_during(output):
     data = json.loads(open(output).read())
@@ -68,8 +68,8 @@ def parse_during(output):
 
 def parse_persistence(output):
     data = json.loads(open(output).read())
-    print {"{0}_persistence".format(k): v.get("uptime_pct") for k, v in data.items()}
-    return {"{0}_persistence".format(k): v.get("uptime_pct") for k, v in data.items()}
+    print {"{0}_persistence".format(k): v.get("create") for k, v in data.items()}
+    return {"{0}_persistence".format(k): v.get("create") for k, v in data.items()}
 
 class SubunitParser(testtools.TestResult):
     def __init__(self):
