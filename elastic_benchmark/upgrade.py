@@ -61,6 +61,10 @@ def parse_uptime(output):
 
     return {"{0}_uptime".format(k): v.get("uptime_pct") for k, v in data.items()}
 
+def parse_during(output):
+    data = json.loads(open(output).read())
+
+    return {"{0}_during".format(k): v.get("uptime_pct") for k, v in data.items()}
 
 class SubunitParser(testtools.TestResult):
     def __init__(self):
@@ -144,8 +148,16 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "-u", "--uptime", metavar="<uptime output>",
-            required=True, default=None, help="A link to the uptime output from the upgrade.")
+            required=False, default=None, help="A link to the uptime output from the upgrade.")
 
+        self.add_argument(
+            "-d", "--during", metavar="<during output>",
+            required=False, default=None, help="A link to the during output from the upgrade.")
+        
+        self.add_argument(
+            "-p", "--persistence", metavar="<persistence test output>",
+            required=False, default=None, help="A link to the persistence test output from the upgrade.")
+        
         self.add_argument(
             "-l", "--logs", metavar="<log link>",
             required=False, default=None, help="A link to the logs.")
@@ -181,7 +193,7 @@ def entry_point():
     #before = parse(cl_args.before)
     #after = parse(cl_args.after)
     #differences = parse_differences(before, after)
-    differences = parse_uptime(cl_args.uptime)
+    differences = parse_during(cl_args.during)
     current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
     differences.update({"done_time": current_time})
     esc.index(scenario_name='test_upgrade3', env='osa_onmetal', **differences)
