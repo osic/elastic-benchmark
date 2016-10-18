@@ -59,7 +59,7 @@ def parse_differences(before, after):
 def parse_uptime(output):
     data = json.loads(open(output).read())
 
-    return {"{0}_uptime".format(k): v.get("uptime_pct") for k, v in data.items()}
+    return {"{0}_uptime".format(k): v.get("create") for k, v in data.items()}
 
 def parse_during(output):
     data = json.loads(open(output).read())
@@ -193,13 +193,14 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 
 def entry_point():
+    current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
     #before = parse(cl_args.before)
     #after = parse(cl_args.after)
     #differences = parse_differences(before, after)
-    differences = parse_during(cl_args.during)
-    current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
+    #differences = parse_uptime(cl_args.uptime)
+    #differences = parse_during(cl_args.during)
     differences = parse_persistence(cl_args.persistence)
     differences.update({"done_time": current_time})
     #esc.index(scenario_name='test_upgrade3', env='osa_onmetal', **differences)
