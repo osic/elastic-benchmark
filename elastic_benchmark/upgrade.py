@@ -3,6 +3,7 @@ import collections
 import io
 import re
 import sys
+import json
 
 import subunit
 import testtools
