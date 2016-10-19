@@ -201,7 +201,9 @@ def entry_point():
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
     before = parse(cl_args.before)
+    print before
     after = parse(cl_args.after)
+    print after
     differences = parse_differences(before, after)
     #differences = parse_uptime(cl_args.uptime)
     #differences = parse_during(cl_args.during)
