@@ -71,10 +71,9 @@ def parse_persistence(output):
     body = {}
     
     for k,v in data.items():
-        for t in k['compute_resources']:
-            for s in v['create']:
-                body.update({s['service']: s['create']})
-    print body
+        for s in v['create']:
+            body.update({s['service']: s['create']})
+    return body
 
 class SubunitParser(testtools.TestResult):
     def __init__(self):
