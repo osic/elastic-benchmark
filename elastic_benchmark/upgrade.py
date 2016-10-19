@@ -42,7 +42,7 @@ def parse_differences(before, after):
     different_keys = set(after.tests.keys()) - set(before.tests.keys())
     different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
     different_keys.update([key for key, value in after.tests.items()
-                           if before.get(key) != value])
+                           if before.tests.get(key) != value])
 
     before_percentage = before.success / before.total
     after_percentage = after.success / after.total
