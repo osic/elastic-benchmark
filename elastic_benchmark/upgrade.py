@@ -68,7 +68,9 @@ def parse_during(output):
 
 def parse_persistence(output):
     data = json.loads(open(output).read())
-    print {"{0}_persistence".format(k): v['create'][0]['create'] for k, v in data.items()}
+    body = None
+    for 
+    print {"{0}_resources_persistence".format(k): v['create'][0]['create'] for k, v in data.items()}
     return {"{0}_persistence".format(k): v.get("create") for k, v in data.items()}
 
 class SubunitParser(testtools.TestResult):
