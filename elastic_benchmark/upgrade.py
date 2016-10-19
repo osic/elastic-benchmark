@@ -67,7 +67,7 @@ def parse_during(output):
     return {"{0}_during".format(k): v.get("uptime_pct") for k, v in data.items()}
 
 def parse_persistence(output):
-    data = json.dumps(open(output).read())
+    data = json.load(open(output).read())
     body = {}
  
     for k,v in data:
