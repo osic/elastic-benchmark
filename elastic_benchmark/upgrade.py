@@ -70,7 +70,10 @@ def parse_persistence(output):
     data = json.loads(open(output).read())
     body = None
    
-    print {"{0}_persistence".format(k): v['create'] for k,v['create'] in data.items()}
+    #persistence_pull = {"{0}_persistence".format(k): v['create'] for k,v in data.items()}
+    for k,v in data.items():
+        for s in v:
+            print s['service'] + ' ' + s['create']
 
     return {"{0}_persistence".format(k): v.get("create") for k, v in data.items()}
 
