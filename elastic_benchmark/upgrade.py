@@ -70,7 +70,7 @@ def parse_persistence(output):
     data = json.dumps(open(output).read())
     body = {}
  
-    for k,v in data.items():
+    for k,v in data:
         for s in v['create']:
             body.update({s['service']: s['create']})
     return body
