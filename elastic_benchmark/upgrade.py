@@ -70,9 +70,10 @@ def parse_persistence(output):
     data = json.loads(open(output).read())
     body = {}
     
-    k['compute_resources'] for k,v in data.items():
-        for s in v['create']:
-            body.update({s['service']: s['create']})
+    for k,v in data.items():
+        for t in k['compute_resources']
+            for s in v['create']:
+                body.update({s['service']: s['create']})
     print body
 
 class SubunitParser(testtools.TestResult):
