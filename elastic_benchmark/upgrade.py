@@ -145,11 +145,11 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "-b", "--before", metavar="<before subunit>",
-            required=False, default=None, help="A link to the subunit from the run before the upgrade.")
+            required=True, default=None, help="A link to the subunit from the run before the upgrade.")
 
         self.add_argument(
             "-a", "--after", metavar="<after subunit>",
-            required=False, default=None, help="A link to the subunit from the run after the upgrade.")
+            required=True, default=None, help="A link to the subunit from the run after the upgrade.")
 
         self.add_argument(
             "-c", "--console", metavar="<console output>",
@@ -157,15 +157,15 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "-u", "--uptime", metavar="<uptime output>",
-            required=False, default=None, help="A link to the uptime output from the upgrade.")
+            required=True, default=None, help="A link to the uptime output from the upgrade.")
 
         self.add_argument(
             "-d", "--during", metavar="<during output>",
-            required=False, default=None, help="A link to the during output from the upgrade.")
+            required=True, default=None, help="A link to the during output from the upgrade.")
         
         self.add_argument(
             "-p", "--persistence", metavar="<persistence test output>",
-            required=False, default=None, help="A link to the persistence test output from the upgrade.")
+            required=True, default=None, help="A link to the persistence test output from the upgrade.")
         
         self.add_argument(
             "-l", "--logs", metavar="<log link>",
@@ -201,12 +201,10 @@ def entry_point():
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
     before = parse(cl_args.before)
-    print before
     after = parse(cl_args.after)
-    print after
     differences = parse_differences(before, after)
-    #differences = parse_uptime(cl_args.uptime)
-    #differences = parse_during(cl_args.during)
-    #differences = parse_persistence(cl_args.persistence)
+    differences.update(parse_uptime(cl_args.uptime))
+    differences.update(parse_during(cl_args.during))
+    differences.update(parse_persistence(cl_args.persistence))
     differences.update({"done_time": current_time})
-    #esc.index(scenario_name='test_upgrade4', env='osa_onmetal', **differences)
+    esc.index(scenario_name='upgrade', env='osa_onmetal', **differences)
