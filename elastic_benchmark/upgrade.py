@@ -68,7 +68,7 @@ def parse_during(output):
 
 def parse_persistence(output):
     data = json.loads(open(output).read())
-    print {"{0}_persistence".format(k): v.get("create")(1) for k, v in data.items()}
+    print {"{0}_persistence".format(k): v['create'] for k, v in data.items()}
     return {"{0}_persistence".format(k): v.get("create") for k, v in data.items()}
 
 class SubunitParser(testtools.TestResult):
@@ -196,11 +196,11 @@ def entry_point():
     current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
-    before = parse(cl_args.before)
-    after = parse(cl_args.after)
-    differences = parse_differences(before, after)
-    differences = parse_uptime(cl_args.uptime)
-    differences = parse_during(cl_args.during)
-    #differences = parse_persistence(cl_args.persistence)
+    #before = parse(cl_args.before)
+    #after = parse(cl_args.after)
+    #differences = parse_differences(before, after)
+    #differences = parse_uptime(cl_args.uptime)
+    #differences = parse_during(cl_args.during)
+    differences = parse_persistence(cl_args.persistence)
     differences.update({"done_time": current_time})
-    #esc.index(scenario_name='test_upgrade3', env='osa_onmetal', **differences)
+    #esc.index(scenario_name='test_upgrade4', env='osa_onmetal', **differences)
