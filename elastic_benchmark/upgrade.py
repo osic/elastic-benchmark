@@ -74,7 +74,7 @@ def parse_persistence(output):
     for k,v in data.items():
         for s in v['create']:
             #body.update({'service:' + s['service'] + ', create:' + s['create']})
-            body.update({s['create']})
+            body.update("create": {s['create']})
     print body
     return {"{0}_persistence".format(k): v.get("create") for k, v in data.items()}
 
