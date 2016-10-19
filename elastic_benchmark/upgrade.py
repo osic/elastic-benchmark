@@ -39,9 +39,9 @@ def parse_console_output(output):
 
 
 def parse_differences(before, after):
-    different_keys = set(after.keys()) - set(before.keys())
-    different_keys.update(set(before.keys()) - set(after.keys()))
-    different_keys.update([key for key, value in after.items()
+    different_keys = set(after.tests.keys()) - set(before.tests.keys())
+    different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
+    different_keys.update([key for key, value in after.tests.items()
                            if before.get(key) != value])
 
     before_percentage = before.success / before.total
