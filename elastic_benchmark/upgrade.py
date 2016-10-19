@@ -67,12 +67,10 @@ def parse_during(output):
     return {"{0}_during".format(k): v.get("uptime_pct") for k, v in data.items()}
 
 def parse_persistence(output):
-    data = json.loads(open(output).read())
+    data = open(output).read()
     body = {}
     
-    print {"{0}_during".format(k): v.get("create") for k, v in data.items()}
-    print " "
-    print data
+    #print {"{0}_during".format(k): v.get("create") for k, v in data.items()}
     for k,v in data.items():
         for s in v['create']:
             body.update({s['service']: s['create']})
