@@ -73,7 +73,7 @@ def parse_persistence(output):
     #persistence_pull = {"{0}_persistence".format(k): v['create'] for k,v in data.items()}
     for k,v in data.items():
         for s['create'] in v:
-            print s[0]
+            print s[1]
 
     return {"{0}_persistence".format(k): v.get("create") for k, v in data.items()}
 
