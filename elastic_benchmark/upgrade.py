@@ -66,7 +66,25 @@ def parse_during(output):
 
     return {"{0}_during".format(k): v.get("uptime_pct") for k, v in data.items()}
 
-def parse_persistence(output):
+
+def parse_persistence_validation(before, after):
+    different_keys = set(after.tests.keys()) - set(before.tests.keys())
+    different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
+    different_keys.update([key for key, value in after.tests.items()
+                           if before.tests.get(key) != value])
+
+    before_percentage = before.success / before.total
+    after_percentage = after.success / after.total
+
+    return {"pers_different_tests": ", ".join(different_keys),
+            "pers_before_success_pct": before_percentage,
+            "pers_after_success_pct": after_percentage,
+            "pers_before_success_total": before.success,
+            "pers_after_success_total": after.success,
+            "pers_before_failures_total": before.failure + before.error,
+            "pers_after_failures_total": after.failure + after.error}
+
+def parse_persistence_create(output):
     data = json.loads(data)
     body = {}
  
