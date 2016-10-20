@@ -182,8 +182,12 @@ class ArgumentParser(argparse.ArgumentParser):
             required=False, default=None, help="A link to the during output from the upgrade.")
         
         self.add_argument(
-            "-p", "--persistence", metavar="<persistence test output>",
-            required=False, default=None, help="A link to the persistence test output from the upgrade.")
+            "-p", "--pre", metavar="<persistence test pre val output>",
+            required=False, default=None, help="A link to the pre val persistence test output from the upgrade.")
+        
+        self.add_argument(
+            "-o", "--post", metavar="<persistence test post val output>",
+            required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
         
         self.add_argument(
             "-l", "--logs", metavar="<log link>",
@@ -220,10 +224,12 @@ def entry_point():
     esc = ElasticSearchClient()
     before = parse(cl_args.before)
     after = parse(cl_args.after)
+    pre_validation = parse(cl_args.pre)
+    post_validation = parse(cl_args.post)
     differences = parse_differences(before, after)
-    #differences.update(parse_uptime(cl_args.uptime))
-    #differences.update(parse_during(cl_args.during))
-    #differences.update(parse_persistence(cl_args.persistence))
+    differences.update(parse_uptime(cl_args.uptime))
+    differences.update(parse_during(cl_args.during))
+    differences.update(parse_persistence_validation(pre_validation, post_validation))
     differences.update({"done_time": current_time})
     print differences
     #esc.index(scenario_name='upgrade', env='osa_onmetal', **differences)
