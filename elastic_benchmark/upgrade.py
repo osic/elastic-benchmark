@@ -47,13 +47,13 @@ def parse_differences(before, after):
     before_percentage = before.success / before.total
     after_percentage = after.success / after.total
 
-    return {"different_tests": ", ".join(different_keys),
-            "before_success_pct": before_percentage,
-            "after_success_pct": after_percentage,
-            "before_success_total": before.success,
-            "after_success_total": after.success,
-            "before_failures_total": before.failure + before.error,
-            "after_failures_total": after.failure + after.error}
+    return {"smoke_different_tests": ", ".join(different_keys),
+            "smoke_before_success_pct": before_percentage,
+            "smoke_after_success_pct": after_percentage,
+            "smoke_before_success_total": before.success,
+            "smoke_after_success_total": after.success,
+            "smoke_before_failures_total": before.failure + before.error,
+            "smoke_after_failures_total": after.failure + after.error}
 
 
 def parse_uptime(output):
