@@ -2,6 +2,9 @@ import argparse
 import collections
 import io
 import re
+import sys
+import json
+from datetime import datetime
 
 import subunit
 import testtools
@@ -36,21 +39,21 @@ def parse_console_output(output):
 
 
 def parse_differences(before, after):
-    different_keys = set(after.keys()) - set(before.keys())
-    different_keys.update(set(before.keys()) - set(after.keys()))
-    different_keys.update([key for key, value in after.items()
-                           if before.get(key) != value])
+    different_keys = set(after.tests.keys()) - set(before.tests.keys())
+    different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
+    different_keys.update([key for key, value in after.tests.items()
+                           if before.tests.get(key) != value])
 
     before_percentage = before.success / before.total
     after_percentage = after.success / after.total
 
-    return {"different_tests": ", ".join(different_keys),
-            "before_success_pct": before_percentage,
-            "after_success_pct": after_percentage,
-            "before_success_total": before.success,
-            "after_success_total": after.success,
-            "before_failures_total": before.failure + before.error,
-            "after_failures_total": after.failure + after.error}
+    return {"smoke_different_tests": ", ".join(different_keys),
+            "smoke_before_success_pct": before_percentage,
+            "smoke_after_success_pct": after_percentage,
+            "smoke_before_success_total": before.success,
+            "smoke_after_success_total": after.success,
+            "smoke_before_failures_total": before.failure + before.error,
+            "smoke_after_failures_total": after.failure + after.error}
 
 
 def parse_uptime(output):
@@ -58,6 +61,37 @@ def parse_uptime(output):
 
     return {"{0}_uptime".format(k): v.get("uptime_pct") for k, v in data.items()}
 
+def parse_during(output):
+    data = json.loads(open(output).read())
+
+    return {"{0}_during".format(k): v.get("uptime_pct") for k, v in data.items()}
+
+
+def parse_persistence_validation(before, after):
+    different_keys = set(after.tests.keys()) - set(before.tests.keys())
+    different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
+    different_keys.update([key for key, value in after.tests.items()
+                           if before.tests.get(key) != value])
+
+    before_percentage = before.success / before.total
+    after_percentage = after.success / after.total
+
+    return {"pers_different_tests": ", ".join(different_keys),
+            "pers_before_success_pct": before_percentage,
+            "pers_after_success_pct": after_percentage,
+            "pers_before_success_total": before.success,
+            "pers_after_success_total": after.success,
+            "pers_before_failures_total": before.failure + before.error,
+            "pers_after_failures_total": after.failure + after.error}
+
+def parse_persistence_create(output):
+    data = json.loads(data)
+    body = {}
+ 
+    for k,v in data.items():
+        for s in v['create']:
+            body.update({s['service']: s['create']})
+    return body
 
 class SubunitParser(testtools.TestResult):
     def __init__(self):
@@ -118,37 +152,49 @@ class FileAccumulator(testtools.StreamResult):
 
 
 class ArgumentParser(argparse.ArgumentParser):
-def __init__(self):
-    desc = "Parses data from an upgrade and inserts into ElasticSearch."
-    usage_string = "elastic-upgrade [-b/--before] [-a/--after] [-c/--console] [-l/--logs]"
+    def __init__(self):
+        desc = "Parses data from an upgrade and inserts into ElasticSearch."
+        usage_string = "elastic-upgrade [-b/--before] [-a/--after] [-c/--console] [-l/--logs] [-u/--uptime]"
 
-    super(ArgumentParser, self).__init__(
-        usage=usage_string, description=desc)
+        super(ArgumentParser, self).__init__(
+            usage=usage_string, description=desc)
 
-    self.prog = "Argument Parser"
+        self.prog = "Argument Parser"
 
-    self.add_argument(
-        "-b", "--before", metavar="<before subunit>",
-        required=True, default=None, help="A link to the subunit from the run before the upgrade.")
+        self.add_argument(
+            "-b", "--before", metavar="<before subunit>",
+            required=True, default=None, help="A link to the subunit from the run before the upgrade.")
 
-    self.add_argument(
-        "-a", "--after", metavar="<after subunit>",
-        required=True, default=None, help="A link to the subunit from the run after the upgrade.")
+        self.add_argument(
+            "-a", "--after", metavar="<after subunit>",
+            required=True, default=None, help="A link to the subunit from the run after the upgrade.")
 
-    self.add_argument(
-        "-c", "--console", metavar="<console output>",
-        required=False, default=None, help="A link to the console output from the upgrade.")
+        self.add_argument(
+            "-c", "--console", metavar="<console output>",
+            required=False, default=None, help="A link to the console output from the upgrade.")
 
-    self.add_argument(
-        "-u", "--uptime", metavar="<uptime output>",
-        required=True, default=None, help="A link to the uptime output from the upgrade.")
+        self.add_argument(
+            "-u", "--uptime", metavar="<uptime output>",
+            required=False, default=None, help="A link to the uptime output from the upgrade.")
 
-    self.add_argument(
-        "-l", "--logs", metavar="<log link>",
-        required=False, default=None, help="A link to the logs.")
+        self.add_argument(
+            "-d", "--during", metavar="<during output>",
+            required=False, default=None, help="A link to the during output from the upgrade.")
+        
+        self.add_argument(
+            "-p", "--pre", metavar="<persistence test pre val output>",
+            required=False, default=None, help="A link to the pre val persistence test output from the upgrade.")
+        
+        self.add_argument(
+            "-o", "--post", metavar="<persistence test post val output>",
+            required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
+        
+        self.add_argument(
+            "-l", "--logs", metavar="<log link>",
+            required=False, default=None, help="A link to the logs.")
 
-    self.add_argument('input', nargs='?', type=argparse.FileType('r'),
-                      default=sys.stdin)
+        self.add_argument('input', nargs='?', type=argparse.FileType('r'),
+                          default=sys.stdin)
 
 
 def parse(subunit_file, non_subunit_name="pythonlogging"):
@@ -173,10 +219,16 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 
 def entry_point():
+    current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
     before = parse(cl_args.before)
     after = parse(cl_args.after)
+    pre_validation = parse(cl_args.pre)
+    post_validation = parse(cl_args.post)
     differences = parse_differences(before, after)
     differences.update(parse_uptime(cl_args.uptime))
-    esc.index(scenario_name="upgrade", **differences)
+    differences.update(parse_during(cl_args.during))
+    differences.update(parse_persistence_validation(pre_validation, post_validation))
+    differences.update({"done_time": current_time})
+    esc.index(scenario_name='upgrade', env='osa_onmetal', **differences)
