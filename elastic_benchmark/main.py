@@ -18,6 +18,7 @@ class ElasticSearchClient(object):
             index="{0}_{1}".format(env, scenario_name.lower()),
             doc_type='results', body=kwargs)
 
+
 def parse_output(output):
     json_output = json.loads(output)
     return_data = []
