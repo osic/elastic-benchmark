@@ -23,7 +23,8 @@ def parse_output(output):
     json_output = json.loads(output)
     return_data = []
     for o in json_output:
-        scenario_name = o.get("key").get("kw").get("args").get("alternate_name") or o.get("key").get("name")
+        scenario_name = o.get("key", {}).get("kw", {}).get("args", {}).get(
+            "alternate_name", None) or o.get("key", {}).get("name", None)
         run_id = str(uuid.uuid4())
         for ir in o.get('result'):
             run_at = ir.get('timestamp')
