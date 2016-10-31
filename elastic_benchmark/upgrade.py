@@ -55,18 +55,6 @@ def parse_differences(before, after):
             "smoke_before_failures_total": before.failure + before.error,
             "smoke_after_failures_total": after.failure + after.error}
 
-
-def parse_uptime(output):
-    data = json.loads(open(output).read())
-
-    return {"{0}_uptime".format(k): v.get("uptime_pct") for k, v in data.items()}
-
-def parse_during(output):
-    data = json.loads(open(output).read())
-
-    return {"{0}_during".format(k): v.get("uptime_pct") for k, v in data.items()}
-
-
 def parse_persistence_validation(before, after):
     different_keys = set(after.tests.keys()) - set(before.tests.keys())
     different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
@@ -84,14 +72,46 @@ def parse_persistence_validation(before, after):
             "pers_before_failures_total": before.failure + before.error,
             "pers_after_failures_total": after.failure + after.error}
 
-def parse_persistence_create(output):
-    data = json.loads(data)
+
+def parse_uptime(output):
+    data = json.loads(open(output).read())
+    api_data = {}
+
+    for k,v in data.items():
+        api_data.update({"{0}_api_uptime".format(k): v["uptime_pct"]})
+        api_data.update({"{0}_api_success".format(k): v["successful_requests"]})
+        api_data.update({"{0}_api_total".format(k): v["total_requests"]})
+
+    return api_data
+
+
+def parse_during(output):
+    data = json.loads(open(output).read())
+    during_data = {}
+
+    for k,v in data.items():
+        during_data.update({"{0}_during_uptime".format(k): v["uptime_pct"]})
+        during_data.update({"{0}_during_success".format(k): v["successful_requests"]})
+        during_data.update({"{0}_during_total".format(k): v["total_requests"]})
+
+    return during_data
+
+
+def parse_persistence(output):
+    data = json.loads(open(output).read())
     body = {}
- 
+
     for k,v in data.items():
         for s in v['create']:
-            body.update({s['service']: s['create']})
+            body.update({k + '_' + s['task']: s['create']})
+        for s in v['after-verify']:
+            body.update({k + '_' + s['task']: s['after-verify']})
+        for s in v['before-verify']:
+            body.update({k + '_' + s['task']: s['before-verify']})
+        for s in v['cleanup']:
+            body.update({k + '_' + s['task']: s['cleanup']})
     return body
+
 
 class SubunitParser(testtools.TestResult):
     def __init__(self):
@@ -180,15 +200,19 @@ class ArgumentParser(argparse.ArgumentParser):
         self.add_argument(
             "-d", "--during", metavar="<during output>",
             required=False, default=None, help="A link to the during output from the upgrade.")
-        
+
         self.add_argument(
-            "-p", "--pre", metavar="<persistence test pre val output>",
+            "-p", "--persistence", metavar="<persistence test output>",
+            required=False, default=None, help="A link to the persistence test output from the upgrade.")
+
+        self.add_argument(
+            "-e", "--pre", metavar="<persistence test pre val output>",
             required=False, default=None, help="A link to the pre val persistence test output from the upgrade.")
-        
+
         self.add_argument(
             "-o", "--post", metavar="<persistence test post val output>",
             required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
-        
+
         self.add_argument(
             "-l", "--logs", metavar="<log link>",
             required=False, default=None, help="A link to the logs.")
