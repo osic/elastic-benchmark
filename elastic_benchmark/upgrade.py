@@ -98,9 +98,10 @@ def parse_during(output):
 
 
 def parse_persistence(output):
+    print output
     data = json.loads(open(output).read())
     body = {}
-    print "here"
+    
     for k,v in data.items():
         for s in v['create']:
             body.update({k + '_' + s['task']: s['create']})
@@ -258,7 +259,6 @@ def entry_point():
     differences = parse_differences(before, after)
     differences.update(parse_uptime(cl_args.uptime))
     differences.update(parse_during(cl_args.during))
-    print "here"
     differences.update(parse_persistence(cl_args.persistence))
     differences.update({"done_time": current_time})
     esc.index(scenario_name='upgrade', env='osa_onmetal', **differences)
