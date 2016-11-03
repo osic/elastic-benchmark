@@ -98,7 +98,6 @@ def parse_during(output):
 
 
 def parse_persistence(output):
-    print output
     data = json.loads(open(output).read())
     body = {}
     
