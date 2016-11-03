@@ -258,6 +258,7 @@ def entry_point():
     differences = parse_differences(before, after)
     differences.update(parse_uptime(cl_args.uptime))
     differences.update(parse_during(cl_args.during))
+    print "here"
     differences.update(parse_persistence(cl_args.persistence))
     differences.update({"done_time": current_time})
     esc.index(scenario_name='upgrade', env='osa_onmetal', **differences)
