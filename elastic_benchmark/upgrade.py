@@ -112,6 +112,11 @@ def parse_persistence(output):
             body.update({k + '_' + s['task']: s['cleanup']})
     return body
 
+def parse_project_status(output):
+     data = json.loads(open(output).read())
+     body = {}
+     print data
+
 
 class SubunitParser(testtools.TestResult):
     def __init__(self):
@@ -217,6 +222,10 @@ class ArgumentParser(argparse.ArgumentParser):
             "-l", "--logs", metavar="<log link>",
             required=False, default=None, help="A link to the logs.")
 
+        self.add_argument(
+            "-s", "--status", metavar="<status log>",
+            required=False, default=None, help="status updated each scenario of during")
+
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
                           default=sys.stdin)
 
@@ -252,5 +261,6 @@ def entry_point():
     differences.update(parse_uptime(cl_args.uptime))
     differences.update(parse_during(cl_args.during))
     differences.update(parse_persistence(cl_args.persistence))
+    parse_project_status(cl_args.status)
     differences.update({"done_time": current_time})
     esc.index(scenario_name='upgrade', env='osa_onmetal', **differences)
