@@ -100,7 +100,7 @@ def parse_during(output):
 def parse_persistence(output):
     data = json.loads(open(output).read())
     body = {}
-
+    print "here"
     for k,v in data.items():
         for s in v['create']:
             body.update({k + '_' + s['task']: s['create']})
