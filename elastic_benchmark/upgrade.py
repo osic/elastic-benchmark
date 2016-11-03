@@ -112,7 +112,7 @@ def parse_persistence(output):
             body.update({k + '_' + s['task']: s['cleanup']})
     return body
 
-def parse_persistence(output):
+def parse_project_status(output):
     data = json.loads(open(output).read())
     body = {}
 
