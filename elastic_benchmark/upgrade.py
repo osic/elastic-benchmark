@@ -39,21 +39,30 @@ def parse_console_output(output):
 
 
 def parse_differences(before, after):
-    different_keys = set(after.tests.keys()) - set(before.tests.keys())
-    different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
-    different_keys.update([key for key, value in after.tests.items()
+    #If the test fails there will be no after tests so it will skip differences logic
+    if after:
+        different_keys = set(after.tests.keys()) - set(before.tests.keys())
+        different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
+        different_keys.update([key for key, value in after.tests.items()
                            if before.tests.get(key) != value])
 
-    before_percentage = before.success / before.total
-    after_percentage = after.success / after.total
+        before_percentage = before.success / before.total
+        after_percentage = after.success / after.total
 
-    return {"smoke_different_tests": ", ".join(different_keys),
-            "smoke_before_success_pct": before_percentage,
-            "smoke_after_success_pct": after_percentage,
-            "smoke_before_success_total": before.success,
-            "smoke_after_success_total": after.success,
-            "smoke_before_failures_total": before.failure + before.error,
-            "smoke_after_failures_total": after.failure + after.error}
+        return {"smoke_different_tests": ", ".join(different_keys),
+                "smoke_before_success_pct": before_percentage,
+                "smoke_after_success_pct": after_percentage,
+                "smoke_before_success_total": before.success,
+                "smoke_after_success_total": after.success,
+                "smoke_before_failures_total": before.failure + before.error,
+                "smoke_after_failures_total": after.failure + after.error}
+    else:
+        before_percentage = before.success / before.total
+
+        return {"smoke_before_success_pct": before_percentage,
+                "smoke_before_success_total": before.success,
+                "smoke_before_failures_total": before.failure + before.error}
+
 
 def parse_persistence_validation(before, after):
     different_keys = set(after.tests.keys()) - set(before.tests.keys())
@@ -74,6 +83,7 @@ def parse_persistence_validation(before, after):
 
 
 def parse_uptime(output):
+    #This is for cases when test fails soon
     if output == None:
         return {"api_uptime": None}
     data = json.loads(open(output).read())
@@ -88,8 +98,10 @@ def parse_uptime(output):
 
 
 def parse_during(output):
+    #This is for cases when test fails soon
     if output == None:
         return {"during_uptime": None}
+                                                                                             
     data = json.loads(open(output).read())
     during_data = {}
 
@@ -102,11 +114,13 @@ def parse_during(output):
 
 
 def parse_persistence(output):
+    #This is for cases when test fails soon
     if output == None:
         return {"persistence_uptime": None}
+
     data = json.loads(open(output).read())
     body = {}
-    
+
     for k,v in data.items():
         for s in v['create']:
             body.update({k + '_' + s['task']: s['create']})
@@ -192,8 +206,8 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "-a", "--after", metavar="<after subunit>",
-            required=True, default=None, help="A link to the subunit from the run after the upgrade.")
-
+            required=False, default=None, help="A link to the subunit from the run after the upgrade.")
+                                                                                                                         
         self.add_argument(
             "-c", "--console", metavar="<console output>",
             required=False, default=None, help="A link to the console output from the upgrade.")
@@ -231,6 +245,10 @@ class ArgumentParser(argparse.ArgumentParser):
 
 
 def parse(subunit_file, non_subunit_name="pythonlogging"):
+    #In some cases the upgrade may fail in the before test section and there will be no after
+    if subunit_file == None:
+        return None
+
     subunit_parser = SubunitParser()
     stream = open(subunit_file, 'rb')
     suite = subunit.ByteStreamToStreamResult(
@@ -262,4 +280,4 @@ def entry_point():
     differences.update(parse_during(cl_args.during))
     differences.update(parse_persistence(cl_args.persistence))
     differences.update({"done_time": current_time})
-    esc.index(scenario_name='upgrade', env='osa_onmetal', **differences)
+    esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)                                                                                                  
