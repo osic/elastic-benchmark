@@ -74,6 +74,8 @@ def parse_persistence_validation(before, after):
 
 
 def parse_uptime(output):
+    if output == None:
+        return
     data = json.loads(open(output).read())
     api_data = {}
 
@@ -86,6 +88,8 @@ def parse_uptime(output):
 
 
 def parse_during(output):
+    if output == None:
+        return
     data = json.loads(open(output).read())
     during_data = {}
 
@@ -98,6 +102,8 @@ def parse_during(output):
 
 
 def parse_persistence(output):
+    if output == None:
+        return
     data = json.loads(open(output).read())
     body = {}
     
