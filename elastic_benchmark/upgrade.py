@@ -124,10 +124,10 @@ def parse_persistence(output):
     for k,v in data.items():
         for s in v['create']:
             body.update({k + '_' + s['task']: s['create']})
-        for s in v['after-verify']:
-            body.update({k + '_' + s['task']: s['after-verify']})
-        for s in v['before-verify']:
-            body.update({k + '_' + s['task']: s['before-verify']})
+        for s in v['after-validate']:
+            body.update({k + '_' + s['task']: s['after-validate']})
+        for s in v['before-validate']:
+            body.update({k + '_' + s['task']: s['before-validate']})
         for s in v['cleanup']:
             body.update({k + '_' + s['task']: s['cleanup']})
     return body
