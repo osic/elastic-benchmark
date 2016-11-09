@@ -48,7 +48,12 @@ def parse_differences(before, after):
 
         before_percentage = before.success / before.total
         after_percentage = after.success / after.total
-
+        print before_percentage
+        print after_percentage
+        before_percentage = before.success / float(before.total)
+        after_percentage = after.success / float(after.total)
+        print before_percentage
+        print after_percentage
         return {"smoke_different_tests": ", ".join(different_keys),
                 "smoke_before_success_pct": before_percentage,
                 "smoke_after_success_pct": after_percentage,
@@ -280,4 +285,5 @@ def entry_point():
     differences.update(parse_during(cl_args.during))
     differences.update(parse_persistence(cl_args.persistence))
     differences.update({"done_time": current_time})
-    esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)                                                                                                  
+    print differences
+    #esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)                                                                                                  
