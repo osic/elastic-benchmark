@@ -45,15 +45,10 @@ def parse_differences(before, after):
         different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
         different_keys.update([key for key, value in after.tests.items()
                            if before.tests.get(key) != value])
-
-        before_percentage = before.success / before.total
-        after_percentage = after.success / after.total
-        print before_percentage
-        print after_percentage
+   
         before_percentage = int((before.success / float(before.total)) * 100)
         after_percentage = int((after.success / float(after.total))  * 100)
-        print before_percentage
-        print after_percentage
+
         return {"smoke_different_tests": ", ".join(different_keys),
                 "smoke_before_success_pct": before_percentage,
                 "smoke_after_success_pct": after_percentage,
