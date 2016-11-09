@@ -50,8 +50,8 @@ def parse_differences(before, after):
         after_percentage = after.success / after.total
         print before_percentage
         print after_percentage
-        before_percentage = int(before.success / float(before.total)) * 100
-        after_percentage = int(after.success / float(after.total)) * 100
+        before_percentage = int((before.success / float(before.total)) * 100)
+        after_percentage = int((after.success / float(after.total))  * 100)
         print before_percentage
         print after_percentage
         return {"smoke_different_tests": ", ".join(different_keys),
