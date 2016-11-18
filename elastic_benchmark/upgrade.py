@@ -203,7 +203,7 @@ class ArgumentParser(argparse.ArgumentParser):
         group = self.add_mutually_exclusive_group()
         group.add_argument(
             "-b", "--before", metavar="<before subunit>",
-            required=True, default=None, help="A link to the subunit from the run before the upgrade.")
+            required=False, default=None, help="A link to the subunit from the run before the upgrade.")
         group.add_argument(
             "-s", "--status", metavar="<status log>",
             required=False, default=None, help="status updated each scenario of during")
