@@ -285,7 +285,7 @@ def entry_point():
     else:
         with open(cl_args.status) as f:
             for line in f:
-		results = line
+		results = json.loads(line)
 		print results
                 esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **results)  
         
