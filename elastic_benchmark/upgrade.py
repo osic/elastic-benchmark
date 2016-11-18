@@ -273,11 +273,18 @@ def entry_point():
     current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
-    before = parse(cl_args.before)
-    after = parse(cl_args.after)
-    differences = parse_differences(before, after)
-    differences.update(parse_uptime(cl_args.uptime))
-    differences.update(parse_during(cl_args.during))
-    differences.update(parse_persistence(cl_args.persistence))
-    differences.update({"done_time": current_time})
-    esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)                                                                                                  
+    if cl_args.status == None:
+        before = parse(cl_args.before)
+        after = parse(cl_args.after)
+        differences = parse_differences(before, after)
+        differences.update(parse_uptime(cl_args.uptime))
+        differences.update(parse_during(cl_args.during))
+        differences.update(parse_persistence(cl_args.persistence))
+        differences.update({"done_time": current_time})
+        esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
+    else:
+        with open(cl_args.status) as f:
+            for line in f:
+	        print line
+            #esc.index(scenario_name='status_log_test', env='osa_onmetal', **line)  
+        
