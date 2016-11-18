@@ -286,5 +286,5 @@ def entry_point():
         with open(cl_args.status) as f:
             for line in f:
 	        print line
-            #esc.index(scenario_name='status_log_test', env='osa_onmetal', **line)  
+                #esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line)  
         
