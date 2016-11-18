@@ -199,10 +199,14 @@ class ArgumentParser(argparse.ArgumentParser):
             usage=usage_string, description=desc)
 
         self.prog = "Argument Parser"
-
-        self.add_argument(
+	
+        group = self.add_mutually_exclusive_group()
+        group.add_argument(
             "-b", "--before", metavar="<before subunit>",
             required=True, default=None, help="A link to the subunit from the run before the upgrade.")
+        group.add_argument(
+            "-s", "--status", metavar="<status log>",
+            required=False, default=None, help="status updated each scenario of during")
 
         self.add_argument(
             "-a", "--after", metavar="<after subunit>",
@@ -235,10 +239,6 @@ class ArgumentParser(argparse.ArgumentParser):
         self.add_argument(
             "-l", "--logs", metavar="<log link>",
             required=False, default=None, help="A link to the logs.")
-
-        self.add_argument(
-            "-s", "--status", metavar="<status log>",
-            required=False, default=None, help="status updated each scenario of during")
 
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
                           default=sys.stdin)
