@@ -292,7 +292,7 @@ def entry_point():
         with open(cl_args.status) as f:
             for line in f:
 		try:
-		    line = line.rstrip('\n')
+		    line = line.rstrip()
 		    line = json.loads(line)
 		    print line
                     esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line) 
