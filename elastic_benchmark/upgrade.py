@@ -276,6 +276,7 @@ def entry_point():
 
     # Parses aggregate log file
     if cl_args.status == None:
+	print "Start aggregating results."
         before = parse(cl_args.before)
         after = parse(cl_args.after)
         differences = parse_differences(before, after)
@@ -284,11 +285,12 @@ def entry_point():
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
+	print "Done aggregating results. "
     else:
 	# Parses status log file
+	print "Start status file parsing: " + cl_args.status
         with open(cl_args.status) as f:
-	    print cl_args.status
             for line in f:
 		line = json.loads(line)
                 esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line)  
-        
+        print "Done status file parsing: " + cl_args.status
