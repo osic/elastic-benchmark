@@ -295,5 +295,5 @@ def entry_point():
 		    line = json.loads(line)
                     esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line) 
 		except Exception as e:
-		    print "Error with line -" + line + "- error: " + e
+		    print "Error with line -" + str(line) + "- error: " + str(e)
         print "Done parsing status file: " + cl_args.status
