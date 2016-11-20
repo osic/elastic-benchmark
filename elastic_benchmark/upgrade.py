@@ -39,7 +39,7 @@ def parse_console_output(output):
 
 
 def parse_differences(before, after):
-    #If the test fails there will be no after tests so it will skip differences logic
+    # If the test fails there will be no after tests so it will skip differences logic
     if after:
         different_keys = set(after.tests.keys()) - set(before.tests.keys())
         different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
@@ -83,7 +83,7 @@ def parse_persistence_validation(before, after):
 
 
 def parse_uptime(output):
-    #This is for cases when test fails soon
+    # This is for cases when test fails soon
     if output == None:
         return {"api_uptime": None}
     data = json.loads(open(output).read())
@@ -98,7 +98,7 @@ def parse_uptime(output):
 
 
 def parse_during(output):
-    #This is for cases when test fails soon
+    # This is for cases when test fails soon
     if output == None:
         return {"during_uptime": None}
                                                                                              
@@ -114,7 +114,7 @@ def parse_during(output):
 
 
 def parse_persistence(output):
-    #This is for cases when test fails soon
+    # This is for cases when test fails soon
     if output == None:
         return {"persistence_uptime": None}
 
@@ -245,7 +245,7 @@ class ArgumentParser(argparse.ArgumentParser):
 
 
 def parse(subunit_file, non_subunit_name="pythonlogging"):
-    #In some cases the upgrade may fail in the before test section and there will be no after
+    # In some cases the upgrade may fail in the before test section and there will be no after
     if subunit_file == None:
         return None
 
@@ -273,6 +273,8 @@ def entry_point():
     current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
+
+    # Parses aggregate log file
     if cl_args.status == None:
         before = parse(cl_args.before)
         after = parse(cl_args.after)
@@ -283,9 +285,9 @@ def entry_point():
         differences.update({"done_time": current_time})
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
     else:
+	# Parses status log file
         with open(cl_args.status) as f:
             for line in f:
-		print line
 		line = json.loads(line)
                 esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line)  
         
