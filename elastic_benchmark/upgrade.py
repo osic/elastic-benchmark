@@ -139,11 +139,6 @@ def parse_persistence(output):
             body.update({k + '_' + s['task']: s['cleanup']})
     return body
 
-def add_date_file(current_time):
-    open('/home/ubuntu/output/date.json','w')
-    f = open('/home/ubuntu/output/date.json','a')
-    f.write(json.dumps(current_time))
-    f.close()
 
 class SubunitParser(testtools.TestResult):
     def __init__(self):
