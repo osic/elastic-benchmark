@@ -277,13 +277,12 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 
 def entry_point():
-    current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
-    current_time = {"done_time": current_time}
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
 
     # Parses aggregate log file
     if cl_args.status == None:
+        current_time = {"done_time": str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))}
 	self.add_date_file(current_time)
 	print "Start aggregating results."
         before = parse(cl_args.before)
@@ -298,7 +297,7 @@ def entry_point():
     else:
 	# Parses status log file
 	print "Start parsing status file: " + cl_args.status
-        with open('output/date.json') as f:
+        with open('/root/output/date.json') as f:
             for line in f:
 		current_time = line
 
