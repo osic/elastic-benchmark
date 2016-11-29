@@ -136,7 +136,7 @@ def parse_persistence(output):
 def add_date_file(current_time):
     open('/home/ubuntu/output/date.json','w')
     f = open('/home/ubuntu/output/date.json','a')
-    f.write(json.dumps(current_time) + "\n")
+    f.write(json.dumps(current_time))
     f.close()
 
 class SubunitParser(testtools.TestResult):
@@ -283,7 +283,7 @@ def entry_point():
 
     # Parses aggregate log file
     if cl_args.status == None:
-        current_time = {"done_time": str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))}
+        current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
 	self.add_date_file(current_time)
 	print "Start aggregating results."
         before = parse(cl_args.before)
@@ -292,7 +292,7 @@ def entry_point():
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
         differences.update(parse_persistence(cl_args.persistence))
-        differences.update(current_time)
+        differences.update({"during_time": current_time})
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
@@ -303,10 +303,9 @@ def entry_point():
 		current_time = line
 
         with open(cl_args.status) as f:
-	    print current_time
             for line in f:
 		if line.strip():
 		    line = json.loads(line)
-		    line.update({"done_time": "2016-11-29T16:20:49"})
+		    line.update({"during_time": current_time})
                     esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line) 
         print "Done parsing status file: " + cl_args.status
