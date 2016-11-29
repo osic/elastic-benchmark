@@ -133,6 +133,12 @@ def parse_persistence(output):
             body.update({k + '_' + s['task']: s['cleanup']})
     return body
 
+def add_date_file(current_time):
+    open('/root/output/date.json','w')
+    f = open('/root/output/date.json','a')
+    f.write(json.dumps(current_time) + "\n")
+    f.close()
+
 class SubunitParser(testtools.TestResult):
     def __init__(self):
         super(SubunitParser, self).__init__()
@@ -272,11 +278,13 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 def entry_point():
     current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
+    current_time = {"done_time": current_time}
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
 
     # Parses aggregate log file
     if cl_args.status == None:
+	self.add_date_file(current_time)
 	print "Start aggregating results."
         before = parse(cl_args.before)
         after = parse(cl_args.after)
@@ -284,15 +292,20 @@ def entry_point():
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
         differences.update(parse_persistence(cl_args.persistence))
-        differences.update({"done_time": current_time})
+        differences.update(current_time)
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
 	# Parses status log file
 	print "Start parsing status file: " + cl_args.status
+        with open('output/date.json') as f:
+            for line in f:
+		current_time = line
+
         with open(cl_args.status) as f:
             for line in f:
 		if line.strip():
 		    line = json.loads(line)
+		    line.update(current_time)
                     esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line) 
         print "Done parsing status file: " + cl_args.status
