@@ -299,4 +299,17 @@ def entry_point():
 	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
 
 	for s in status_files:
-		print s
+            # Parses status log file
+	    print "Start parsing status file: " + cl_args.status
+	    with open(s) as f:
+                for line in f:
+		    current_time = json.loads(line)
+
+	    with open(cl_args.status) as f:
+		for line in f:
+		    if line.strip():
+	                line = json.loads(line)
+			line.update({"done_time": current_time})
+			esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line)
+	    print "Done parsing " + str(s)
+    print "Done parsing status file: " + cl_args.status
