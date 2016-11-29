@@ -306,11 +306,11 @@ def entry_point():
 	print "Done aggregating results. "
     else:
 	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
+        my_file = Path('/home/ubuntu/output/date.json')
 
 	for s in status_files:
             # Parses status log file
 	    print "Start parsing status file: " + cl_args.status
-            my_file = Path('/home/ubuntu/output/date.json')
 
             if my_file.is_file():
             # file exists
