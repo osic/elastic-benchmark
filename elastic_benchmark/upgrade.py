@@ -283,6 +283,7 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 def entry_point():
     current_time = ''
+    differences = {}
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
 
@@ -299,7 +300,7 @@ def entry_point():
 	if cl_args.before:
             before = parse(cl_args.before)
             after = parse(cl_args.after)
-        differences = parse_differences(before, after)
+            differences = parse_differences(before, after)
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
         differences.update(parse_persistence(cl_args.persistence))
