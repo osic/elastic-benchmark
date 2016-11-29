@@ -40,6 +40,11 @@ def parse_console_output(output):
 
 def parse_differences(before, after):
     # If the test fails there will be no after tests so it will skip differences logic
+    if before == None:
+        return {"smoke_before_success_pct": None,
+                "smoke_before_success_total": None,
+                "smoke_before_failures_total": None}
+
     if after:
         different_keys = set(after.tests.keys()) - set(before.tests.keys())
         different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
@@ -286,8 +291,9 @@ def entry_point():
         current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
 	self.add_date_file(current_time)
 	print "Start aggregating results."
-        before = parse(cl_args.before)
-        after = parse(cl_args.after)
+	if cl_args.before:
+            before = parse(cl_args.before)
+            after = parse(cl_args.after)
         differences = parse_differences(before, after)
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
