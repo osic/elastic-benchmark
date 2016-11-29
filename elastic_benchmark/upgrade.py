@@ -277,6 +277,7 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 
 def entry_point():
+    current_time = ''
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
 
