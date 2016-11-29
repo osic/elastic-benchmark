@@ -134,8 +134,8 @@ def parse_persistence(output):
     return body
 
 def add_date_file(current_time):
-    open('/root/output/date.json','w')
-    f = open('/root/output/date.json','a')
+    open('/home/ubuntu/output/date.json','w')
+    f = open('/home/ubuntu/output/date.json','a')
     f.write(json.dumps(current_time) + "\n")
     f.close()
 
@@ -298,7 +298,7 @@ def entry_point():
     else:
 	# Parses status log file
 	print "Start parsing status file: " + cl_args.status
-        with open('/root/output/date.json') as f:
+        with open('/home/ubuntu/output/date.json') as f:
             for line in f:
 		current_time = line
 
