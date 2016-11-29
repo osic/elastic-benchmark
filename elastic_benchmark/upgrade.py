@@ -301,11 +301,11 @@ def entry_point():
             before = parse(cl_args.before)
             after = parse(cl_args.after)
             differences = parse_differences(before, after)
-	    print before
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"during_time": current_time})
+	print differences
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
