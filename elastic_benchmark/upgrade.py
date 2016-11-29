@@ -301,6 +301,7 @@ def entry_point():
             before = parse(cl_args.before)
             after = parse(cl_args.after)
             differences = parse_differences(before, after)
+	    print before
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
         differences.update(parse_persistence(cl_args.persistence))
