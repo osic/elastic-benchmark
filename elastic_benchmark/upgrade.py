@@ -301,7 +301,7 @@ def entry_point():
 	for s in status_files:
             # Parses status log file
 	    print "Start parsing status file: " + cl_args.status
-	    with open(s) as f:
+	    with open('/home/ubuntu/output/date.json') as f:
                 for line in f:
 		    current_time = json.loads(line)
 
