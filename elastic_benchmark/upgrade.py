@@ -312,4 +312,4 @@ def entry_point():
 			line.update({"done_time": current_time})
 			esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line)
 	    print "Done parsing " + str(s)
-    print "Done parsing status file: " + cl_args.status
+        print "Done parsing status file: " + cl_args.status
