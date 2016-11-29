@@ -296,16 +296,7 @@ def entry_point():
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
-	# Parses status log file
-	print "Start parsing status file: " + cl_args.status
-        with open('/home/ubuntu/output/date.json') as f:
-            for line in f:
-		current_time = json.loads(line)
+	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
 
-        with open(cl_args.status) as f:
-            for line in f:
-		if line.strip():
-		    line = json.loads(line)
-		    line.update({"done_time": current_time})
-                    esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line) 
-        print "Done parsing status file: " + cl_args.status
+	for s in status_files:
+		print s
