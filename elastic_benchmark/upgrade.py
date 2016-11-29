@@ -4,10 +4,11 @@ import io
 import re
 import sys
 import json
-from datetime import datetime
-
 import subunit
 import testtools
+
+from datetime import datetime
+from pathlib import Path
 
 from elastic_benchmark.main import ElasticSearchClient
 
@@ -314,9 +315,15 @@ def entry_point():
 	for s in status_files:
             # Parses status log file
 	    print "Start parsing status file: " + cl_args.status
-	    with open('/home/ubuntu/output/date.json') as f:
-                for line in f:
-		    current_time = json.loads(line)
+            my_file = Path('/home/ubuntu/output/date.json')
+
+            if my_file.is_file():
+            # file exists
+	        with open('/home/ubuntu/output/date.json') as f:
+                    for line in f:
+		        current_time = json.loads(line)
+	    else:
+		current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
 
 	    with open(s) as f:
 		for line in f:
