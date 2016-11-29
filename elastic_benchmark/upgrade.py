@@ -303,6 +303,7 @@ def entry_point():
 		current_time = line
 
         with open(cl_args.status) as f:
+	    print current_time
             for line in f:
 		if line.strip():
 		    line = json.loads(line)
