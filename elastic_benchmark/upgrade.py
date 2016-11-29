@@ -289,7 +289,12 @@ def entry_point(self):
     # Parses aggregate log file
     if cl_args.status == None:
         current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
-	self.add_date_file(current_time)
+	
+	open('/home/ubuntu/output/date.json','w')
+        f = open('/home/ubuntu/output/date.json','a')
+        f.write(json.dumps(current_time))
+        f.close()
+	
 	print "Start aggregating results."
 	if cl_args.before:
             before = parse(cl_args.before)
