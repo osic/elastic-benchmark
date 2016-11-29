@@ -305,11 +305,10 @@ def entry_point():
                 for line in f:
 		    current_time = json.loads(line)
 
-	    with open(cl_args.status) as f:
+	    with open(s) as f:
 		for line in f:
 		    if line.strip():
 	                line = json.loads(line)
 			line.update({"done_time": current_time})
 			esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line)
 	    print "Done parsing " + str(s)
-        print "Done parsing status file: " + cl_args.status
