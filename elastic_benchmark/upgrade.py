@@ -277,6 +277,7 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 
 def entry_point():
+    current_time = ''
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
 
@@ -299,7 +300,12 @@ def entry_point():
 	print "Start parsing status file: " + cl_args.status
         with open('/home/ubuntu/output/date.json') as f:
             for line in f:
-		line = json.loads(line)
-		print line
-		#current_time = json.loads(line)
-		#print line
+		current_time = json.loads(line)
+
+        with open(cl_args.status) as f:
+            for line in f:
+		if line.strip():
+		    line = json.loads(line)
+		    line.update({"done_time": current_time)
+                    esc.index(scenario_name='upgrade_status_log_test', env='osa_onmetal', **line) 
+        print "Done parsing status file: " + cl_args.status
