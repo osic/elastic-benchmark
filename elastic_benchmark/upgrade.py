@@ -8,8 +8,6 @@ import subunit
 import testtools
 
 from datetime import datetime
-from pathlib import Path
-
 from elastic_benchmark.main import ElasticSearchClient
 
 
@@ -307,19 +305,13 @@ def entry_point():
 	print "Done aggregating results. "
     else:
 	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
-        my_file = Path('/home/ubuntu/output/date.json')
 
 	for s in status_files:
             # Parses status log file
 	    print "Start parsing status file: " + cl_args.status
-
-            if my_file.is_file():
-            # file exists
-	        with open('/home/ubuntu/output/date.json') as f:
-                    for line in f:
-		        current_time = json.loads(line)
-	    else:
-		current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
+	    with open('/home/ubuntu/output/date.json') as f:
+                for line in f:
+		    current_time = json.loads(line)
 
 	    with open(s) as f:
 		for line in f:
