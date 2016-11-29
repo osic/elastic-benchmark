@@ -277,7 +277,7 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 
 def entry_point():
-    current_time = ''
+    current_time = date
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
 
@@ -300,7 +300,7 @@ def entry_point():
 	print "Start parsing status file: " + cl_args.status
         with open('/home/ubuntu/output/date.json') as f:
             for line in f:
-		current_time = line
+		current_time = str(line)
 
         with open(cl_args.status) as f:
             for line in f:
