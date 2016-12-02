@@ -7,7 +7,7 @@ setup(
     author='Stephen Lowrie',
     author_email='stephen.lowrie@rackspace.com',
     url='https://github.com/osic/elastic-benchmark',
-    packages=find_packages(),
+    packages=['elastic-benchmark'],
     install_requires=open('requirements.txt').read(),
     classifiers=(
         'Development Status :: 4 - Beta',
