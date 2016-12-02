@@ -6,7 +6,7 @@ setup(
     description='Parses a given input and inserts into ElasticSearch.',
     author='Stephen Lowrie',
     author_email='stephen.lowrie@rackspace.com',
-    url='https://github.com/arithx/elastic-benchmark',
+    url='https://github.com/osic/elastic-benchmark',
     packages=find_packages(),
     install_requires=open('requirements.txt').read(),
     classifiers=(
