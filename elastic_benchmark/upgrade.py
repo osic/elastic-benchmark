@@ -317,7 +317,7 @@ def entry_point():
 		for line in f:
 		    if line.strip():
 	                line = json.loads(line)
-			esc.index(scenario_name='upgrade_status_timeline', env='osa_onmetal', **line)
+			esc.index(scenario_name='upgrade_status_log_dash', env='osa_onmetal', **line)
 			line.update({"done_time": current_time})
 			esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line)
 	    print "Done parsing " + str(s)
