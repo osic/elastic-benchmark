@@ -90,6 +90,10 @@ def parse_uptime(output):
     # This is for cases when test fails soon
     if output == None:
         return {"api_uptime": None}
+    elif  os.path.isfile(output) == False:
+	print "File " + output + " does not exist."
+	return {"api_uptime": None}
+
     data = json.loads(open(output).read())
     api_data = {}
 
@@ -104,6 +108,9 @@ def parse_uptime(output):
 def parse_during(output):
     # This is for cases when test fails soon
     if output == None:
+	return {"during_uptime": None}
+    elif  os.path.isfile(output) == False:
+	print "File " + output + " does not exist."
         return {"during_uptime": None}
                                                                                              
     data = json.loads(open(output).read())
@@ -120,8 +127,11 @@ def parse_during(output):
 
 def parse_persistence(output):
     # This is for cases when test fails soon
-    if output == None:
+    if output == None or os.path.isfile(output) == False:
         return {"persistence_uptime": None}
+    elif  os.path.isfile(output) == False:
+	print "File " + output + " does not exist."
+	return {"persistence_uptime": None}
 
     data = json.loads(open(output).read())
     body = {}
