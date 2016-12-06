@@ -6,6 +6,7 @@ import sys
 import json
 import subunit
 import testtools
+import os
 
 from datetime import datetime
 from elastic_benchmark.main import ElasticSearchClient
