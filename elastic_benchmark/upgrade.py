@@ -315,7 +315,7 @@ def entry_point():
             # Parses status log file
 	    print "Start parsing status file: " + cl_args.status
 
-	    if os.path.isfile(output) == True:
+	    if os.path.isfile(s) == True:
 		    with open(s) as f:
 			for line in f:
 			    if line.strip():
