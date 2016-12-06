@@ -296,7 +296,7 @@ def entry_point():
         current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
 	
 	#Kind of a hack to attach the status logs to the this data by date
-	open('/home/ubuntu/output/date.json','w')
+	open('/home/ubuntu/output/date.json','w+')
         f = open('/home/ubuntu/output/date.json','a')
         f.write(json.dumps(current_time))
         f.close()
