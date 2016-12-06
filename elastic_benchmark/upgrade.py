@@ -315,9 +315,10 @@ def entry_point():
             # Parses status log file
 	    print "Start parsing status file: " + cl_args.status
 
-	    with open(s) as f:
-		for line in f:
-		    if line.strip():
-	                line = json.loads(line)
-			esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line)
+	    if os.path.isfile(output) == True:
+		    with open(s) as f:
+			for line in f:
+			    if line.strip():
+				line = json.loads(line)
+				esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
 	    print "Done parsing " + str(s)
