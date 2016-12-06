@@ -295,12 +295,6 @@ def entry_point():
     if cl_args.status == None:
         current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
 	
-	#Kind of a hack to attach the status logs to the this data by date
-	open('/home/ubuntu/output/date.json','w+')
-        f = open('/home/ubuntu/output/date.json','a')
-        f.write(json.dumps(current_time))
-        f.close()
-	
 	print "Start aggregating results."
 	if cl_args.before:
             before = parse(cl_args.before)
@@ -319,15 +313,10 @@ def entry_point():
 	for s in status_files:
             # Parses status log file
 	    print "Start parsing status file: " + cl_args.status
-	    with open('/home/ubuntu/output/date.json') as f:
-                for line in f:
-		    current_time = json.loads(line)
 
 	    with open(s) as f:
 		for line in f:
 		    if line.strip():
 	                line = json.loads(line)
-			esc.index(scenario_name='upgrade_status_log_dash', env='osa_onmetal', **line)
-			line.update({"done_time": current_time})
 			esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line)
 	    print "Done parsing " + str(s)
