@@ -62,7 +62,7 @@ def parse_differences(before, after):
                 "smoke_before_failures_total": before.failure + before.error,
                 "smoke_after_failures_total": after.failure + after.error}
     else:
-        before_percentage = before.success / before.total
+        before_percentage = int((before.success / float(before.total)) * 100)
 
         return {"smoke_before_success_pct": before_percentage,
                 "smoke_before_success_total": before.success,
