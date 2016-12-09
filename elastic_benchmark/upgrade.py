@@ -266,7 +266,7 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
     if subunit_file == None:
         return None
     elif  os.path.isfile(subunit_file) == False:
-	print "File " + output + " does not exist."
+	print "File " + subunit_file + " does not exist."
         return None
 
     subunit_parser = SubunitParser()
