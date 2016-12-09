@@ -265,6 +265,9 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
     # In some cases the upgrade may fail in the before test section and there will be no after
     if subunit_file == None:
         return None
+    elif  os.path.isfile(subunit_file) == False:
+	print "File " + output + " does not exist."
+        return None
 
     subunit_parser = SubunitParser()
     stream = open(subunit_file, 'rb')
