@@ -135,10 +135,6 @@ def parse_persistence(output):
 	return {"persistence_uptime": None}
 
     data = json.loads(open(output).read())
-	
-    #Quick fix to catch failures in persistence.  Will tweak later
-    after_validation_status = 1
-    before_validation_status = 1
 
     body = {}
 
@@ -146,10 +142,10 @@ def parse_persistence(output):
         for s in v['create']:
             body.update({k + '_' + s['task']: s['create']})
         for s in v['after-validate']:
-	    after_validation_status = s['after-validate'] * after_validation_status
+	    after_validation_status = s['after-validate'] * 1
             body.update({k + '_' + s['task']: after_validation_status})
         for s in v['before-validate']:
-            before_validation_status = s['before-validate'] * before_validation_status
+            before_validation_status = s['before-validate'] * 1
             body.update({k + '_' + s['task']: before_validation_status})
         for s in v['cleanup']:
             body.update({k + '_' + s['task']: s['cleanup']})
