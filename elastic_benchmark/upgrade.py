@@ -135,14 +135,14 @@ def parse_persistence(output):
 	return {"persistence_uptime": None}
 
     data = json.loads(open(output).read())
-	
-    #Quick fix to catch failures. TODO change it
-    after_validation_status = 1
-    before_validation_status = 1
 
     body = {}
 
     for k,v in data.items():
+        #Quick fix to catch failures. TODO change it
+        after_validation_status = 1
+        before_validation_status = 1
+
         for s in v['create']:
             body.update({k + '_' + s['task']: s['create']})
         for s in v['after-validate']:
