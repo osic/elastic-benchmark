@@ -121,7 +121,7 @@ def parse_during(output):
         during_data.update({"{0}_during_uptime".format(k): v["uptime_pct"]})
         during_data.update({"{0}_during_success".format(k): v["successful_requests"]})
         during_data.update({"{0}_during_total".format(k): v["total_requests"]})
-	during_data.update({"{0}_during_total".format(k): v["down_time"]})
+	during_data.update({"{0}_down_time".format(k): v["down_time"]})
 	
     return during_data
 
