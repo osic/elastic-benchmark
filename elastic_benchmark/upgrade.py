@@ -127,6 +127,7 @@ def parse_during(output):
 
 def parse_during_from_status(output):
     # This is for cases when test fails soon
+    down_time = 0
     if output == None:
 	return {"during_uptime": None}
     elif  os.path.isfile(output) == False:
@@ -140,6 +141,12 @@ def parse_during_from_status(output):
     statuslog.close()
     line = linelist[len(linelist)-1].strip()
     line = json.loads(line)
+
+    if cl_args.api:
+        for i in linelist['status']:
+            down_time += i
+	line['total_down'] = down_time
+
     uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 	
     during_data.update({line['service'] + "_during_uptime": uptime_pct})
@@ -295,6 +302,10 @@ class ArgumentParser(argparse.ArgumentParser):
         self.add_argument(
             "-l", "--logs", metavar="<log link>",
             required=False, default=None, help="A link to the logs.")
+	
+        self.add_argument(
+            "-g", "--api", metavar="<api status logs>",
+            required=False, default=None, help="Api status logs.")
 
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
                           default=sys.stdin)
