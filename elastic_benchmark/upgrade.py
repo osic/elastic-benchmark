@@ -369,7 +369,8 @@ def entry_point():
 	differences.update(parse_during_from_status(cl_args.swift))
 	differences.update(parse_during_from_status(cl_args.keystone))
 	differences.update(parse_during_from_status(cl_args.nova))
-	differences.update(parse_during_from_status(cl_args.api))
+	differences.update(parse_during_from_status(cl_args.apig))
+	differences.update(parse_during_from_status(cl_args.apiw))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
 	print differences
