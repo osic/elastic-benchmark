@@ -145,7 +145,7 @@ def parse_during_from_status(output):
 
     if cl_args.api:
         for i in range(len(linelist)):
-            down_time += linelist[i]['status']
+            down_time += linelist[0]['status']
 	line['total_down'] = down_time
 
     uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
