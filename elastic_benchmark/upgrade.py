@@ -281,7 +281,15 @@ class ArgumentParser(argparse.ArgumentParser):
             required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
 
         self.add_argument(
-            "-z", "--swift", metavar="<swift during output>",
+            "-f", "--swift", metavar="<swift during output>",
+            required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
+	
+        self.add_argument(
+            "-n", "--nova", metavar="<swift during output>",
+            required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
+	
+        self.add_argument(
+            "-k", "--keystone", metavar="<swift during output>",
             required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
 
         self.add_argument(
@@ -338,6 +346,8 @@ def entry_point():
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
 	differences.update(parse_during_from_status(cl_args.swift))
+	differences.update(parse_during_from_status(cl_args.keystone))
+	differences.update(parse_during_from_status(cl_args.nova))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
 	print differences
