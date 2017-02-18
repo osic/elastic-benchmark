@@ -125,6 +125,26 @@ def parse_during(output):
 	
     return during_data
 
+def parse_during_from_status(output):
+    # This is for cases when test fails soon
+    if output == None:
+	return {"during_uptime": None}
+    elif  os.path.isfile(output) == False:
+	print "File " + output + " does not exist."
+        return {"during_uptime": None}
+
+    during_data = {}
+                                                                                             
+    statuslog = open(output, "r")
+    linelist = statuslog.readlines()
+    statuslog.close()
+    line = linelist[len(linelist)-1].strip()
+    line = json.loads(line)
+    uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
+	
+    during_data.update({line['service'] + "_during_uptime": uptime_pct})
+    print during_data
+    return during_data
 
 def parse_persistence(output):
     # This is for cases when test fails soon
@@ -261,6 +281,10 @@ class ArgumentParser(argparse.ArgumentParser):
             required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
 
         self.add_argument(
+            "-z", "--swift", metavar="<swift during output>",
+            required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
+
+        self.add_argument(
             "-l", "--logs", metavar="<log link>",
             required=False, default=None, help="A link to the logs.")
 
@@ -313,10 +337,11 @@ def entry_point():
             differences = parse_differences(before, after)
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
+	differences.update(parse_during_from_status(cl_args.swift))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
 	print differences
-        esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
+        #esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
 	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
@@ -330,5 +355,5 @@ def entry_point():
 			for line in f:
 			    if line.strip():
 				line = json.loads(line)
-				esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
+				#esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
 	    print "Done parsing " + str(s)
