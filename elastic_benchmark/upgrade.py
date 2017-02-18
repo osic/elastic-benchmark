@@ -127,6 +127,7 @@ def parse_during(output):
 
 def parse_during_from_status(output):
     # This is for cases when test fails soon
+    cl_args = ArgumentParser().parse_args()
     down_time = 0
     if output == None:
 	return {"during_uptime": None}
