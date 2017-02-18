@@ -143,7 +143,7 @@ def parse_during_from_status(output):
     line = linelist[len(linelist)-1].strip()
     line = json.loads(line)
 
-    if cl_args.api:
+    if cl_args.apig or cl_args.apiw:
         for i in range(len(linelist)):
 	    one_line = linelist[i]
 	    one_line = json.loads(one_line)
@@ -152,7 +152,7 @@ def parse_during_from_status(output):
 
     uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 	
-    if cl_args.api:
+    if cl_args.apig or cl_args.apiw:
 	during_data.update({line['service'] + "_api_uptime": uptime_pct})
     else:
         during_data.update({line['service'] + "_during_uptime": uptime_pct})
@@ -310,7 +310,11 @@ class ArgumentParser(argparse.ArgumentParser):
             required=False, default=None, help="A link to the logs.")
 	
         self.add_argument(
-            "-g", "--api", metavar="<api status logs>",
+            "-g", "--apig", metavar="<api status logs>",
+            required=False, default=None, help="Api status logs.")
+
+        self.add_argument(
+            "-w", "--apiw", metavar="<api status logs>",
             required=False, default=None, help="Api status logs.")
 
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
