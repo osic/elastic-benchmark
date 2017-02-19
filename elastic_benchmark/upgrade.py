@@ -378,7 +378,7 @@ def entry_point():
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
 	print differences
-        #esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
+        esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
 	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
@@ -392,5 +392,5 @@ def entry_point():
 			for line in f:
 			    if line.strip():
 				line = json.loads(line)
-				#esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
+				esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
 	    print "Done parsing " + str(s)
