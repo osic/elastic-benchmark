@@ -144,7 +144,6 @@ def parse_during_from_status(output):
     line = json.loads(line)
 
     if cl_args.apig or cl_args.apiw:
-	print "inside of parsing total down loop"
         for i in range(len(linelist)):
 	    one_line = linelist[i]
 	    one_line = json.loads(one_line)
@@ -158,6 +157,7 @@ def parse_during_from_status(output):
 	during_data.update({line['service'] + "_api_uptime": uptime_pct})
     else:
         during_data.update({line['service'] + "_during_uptime": uptime_pct})
+    print during_data
     return during_data
 
 def parse_persistence(output):
@@ -374,7 +374,7 @@ def entry_point():
 	differences.update(parse_during_from_status(cl_args.apiw))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
-	print differences
+	#print differences
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
