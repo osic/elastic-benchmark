@@ -148,7 +148,6 @@ def parse_during_from_status(output):
         for i in range(len(linelist)):
 	    one_line = linelist[i]
 	    one_line = json.loads(one_line)
-	    print one_line['status']
             down_time += one_line['status']
 	line['total_down'] = down_time
 	uptime_pct = str(round((line['total_down'] / line['duration']) * 100, 1))
@@ -159,7 +158,6 @@ def parse_during_from_status(output):
 	during_data.update({line['service'] + "_api_uptime": uptime_pct})
     else:
         during_data.update({line['service'] + "_during_uptime": uptime_pct})
-    print during_data
     return during_data
 
 def parse_persistence(output):
@@ -301,11 +299,11 @@ class ArgumentParser(argparse.ArgumentParser):
             required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
 	
         self.add_argument(
-            "-n", "--nova", metavar="<swift during output>",
+            "-n", "--nova", metavar="<nova during output>",
             required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
 	
         self.add_argument(
-            "-k", "--keystone", metavar="<swift during output>",
+            "-k", "--keystone", metavar="<keystone during output>",
             required=False, default=None, help="A link to the post val persistence test output from the upgrade.")
 
         self.add_argument(
