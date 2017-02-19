@@ -395,7 +395,7 @@ def entry_point():
 	differences.update(parse_api_from_status(cl_args.apiw))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
-	#print differences
+	print differences
         esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
