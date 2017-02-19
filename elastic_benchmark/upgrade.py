@@ -148,7 +148,9 @@ def parse_during_from_status(output):
         for i in range(len(linelist)):
 	    one_line = linelist[i]
 	    one_line = json.loads(one_line)
+	    print one_line['status']
             down_time += one_line['status']
+	    print down_time
 	line['total_down'] = down_time
 
     uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
