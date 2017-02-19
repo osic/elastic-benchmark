@@ -160,6 +160,40 @@ def parse_during_from_status(output):
     print during_data
     return during_data
 
+def parse_api_from_status(output):
+    # This is for cases when test fails soon
+    cl_args = ArgumentParser().parse_args()
+    down_time = 0
+    if output == None:
+	return {"api_uptime": None}
+    elif  os.path.isfile(output) == False:
+	print "File " + output + " does not exist."
+        return {"api_uptime": None}
+
+    during_data = {}
+                                                                                             
+    statuslog = open(output, "r")
+    linelist = statuslog.readlines()
+    statuslog.close()
+    line = linelist[len(linelist)-1].strip()
+    line = json.loads(line)
+
+    if cl_args.apig or cl_args.apiw:
+        for i in range(len(linelist)):
+	    one_line = linelist[i]
+	    one_line = json.loads(one_line)
+            down_time += one_line['status']
+	line['total_down'] = down_time
+	uptime_pct = str(round((line['total_down'] / line['duration']) * 100, 1))
+    else:
+        uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
+	
+    if cl_args.apig or cl_args.apiw:
+	during_data.update({line['service'] + "_api_uptime": uptime_pct})
+    else:
+        during_data.update({line['service'] + "_during_uptime": uptime_pct})
+    return during_data
+
 def parse_persistence(output):
     # This is for cases when test fails soon
     if output == None or os.path.isfile(output) == False:
@@ -370,8 +404,8 @@ def entry_point():
 	differences.update(parse_during_from_status(cl_args.swift))
 	differences.update(parse_during_from_status(cl_args.keystone))
 	differences.update(parse_during_from_status(cl_args.nova))
-	differences.update(parse_during_from_status(cl_args.apig))
-	differences.update(parse_during_from_status(cl_args.apiw))
+	differences.update(parse_api_from_status(cl_args.apig))
+	differences.update(parse_api_from_status(cl_args.apiw))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
 	#print differences
