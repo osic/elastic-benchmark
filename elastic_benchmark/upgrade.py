@@ -144,6 +144,7 @@ def parse_during_from_status(output):
     line = json.loads(line)
 
     if cl_args.apig or cl_args.apiw:
+	print "inside of parsing total down loop"
         for i in range(len(linelist)):
 	    one_line = linelist[i]
 	    one_line = json.loads(one_line)
