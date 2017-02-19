@@ -152,7 +152,7 @@ def parse_during_from_status(output):
             down_time += one_line['status']
 	    print down_time
 	line['total_down'] = down_time
-
+    print line
     uptime_pct = round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1)
     uptime_pct = str(100 - uptime_pct)
 	
