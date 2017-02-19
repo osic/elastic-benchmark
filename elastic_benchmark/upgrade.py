@@ -153,8 +153,8 @@ def parse_during_from_status(output):
 	    print down_time
 	line['total_down'] = down_time
 
-    uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
-    uptime_pct = 100 - uptime_pct
+    uptime_pct = round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1)
+    uptime_pct = str(100 - uptime_pct)
 	
     if cl_args.apig or cl_args.apiw:
 	during_data.update({line['service'] + "_api_uptime": uptime_pct})
