@@ -171,11 +171,7 @@ def parse_api_from_status(output):
 	    one_line = json.loads(one_line)
             down_time += one_line['status']
 	line['total_down'] = down_time
-	print line['total_down']
-	print line['duration']
-	uptime_pct = str(round((line['total_down'] / line['duration']) * 100, 1))
-	print "uptime: " + uptime_pct
-	print round((line['total_down'] / line['duration']) * 100, 1)
+	uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
     else:
         uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
