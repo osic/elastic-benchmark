@@ -175,11 +175,13 @@ def parse_api_from_status(output):
 	uptime_pct = str(round((line['total_down'] / line['duration']) * 100, 1))
     else:
         uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
-	
+
+    print "uptime: " + uptime_pct
     if cl_args.apig or cl_args.apiw:
 	during_data.update({line['service'] + "_api_uptime": uptime_pct})
     else:
         during_data.update({line['service'] + "_during_uptime": uptime_pct})
+    print during_data
     return during_data
 
 def parse_persistence(output):
