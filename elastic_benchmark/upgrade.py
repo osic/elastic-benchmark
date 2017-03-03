@@ -47,6 +47,7 @@ def parse_differences(before, after):
 
     if after:
         different_keys = set(after.tests.keys()) - set(before.tests.keys())
+	print after.tests.keys()
         different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
         different_keys.update([key for key, value in after.tests.items()
                            if before.tests.get(key) != value])
@@ -397,7 +398,7 @@ def entry_point():
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
 	print differences
-        esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
+        #esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
 	print "Done aggregating results. "
     else:
 	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
