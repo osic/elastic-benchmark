@@ -20,6 +20,14 @@ class ElasticSearchClient(object):
 
 
 def parse_output(output):
+    prefix = ''
+    cl_args = ArgumentParser().parse_args()
+    if cl_args.environment:
+        if 'after' in cl_args.environment:
+            prefix = 'after'
+        elif 'before' in cl_args.environment:
+            prefix = 'before'
+
     json_output = json.loads(output)
     return_data = []
     for o in json_output:
@@ -31,7 +39,7 @@ def parse_output(output):
             duration = ir.get('duration')
             result = 'pass' if len(ir.get('error')) == 0 else 'fail'
             return_data.append({
-                "scenario_name": scenario_name,
+                "scenario_name": prefix + "_" + scenario_name,
                 "run_id": run_id,
                 "run_at": datetime.datetime.fromtimestamp(int(run_at)).strftime("%Y-%m-%dT%H:%M:%S%z"),
                 "runtime": duration,
