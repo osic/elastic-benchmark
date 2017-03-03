@@ -412,5 +412,8 @@ def entry_point():
 			for line in f:
 			    if line.strip():
 				line = json.loads(line)
-				esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
+				if 'api' in cl_args.status:
+				    esc.index(scenario_name='upgrade_api_status_log', env='osa_onmetal', **line)
+				else:
+				    esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
 	    print "Done parsing " + str(s)
