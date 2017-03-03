@@ -106,6 +106,7 @@ class ArgumentParser(argparse.ArgumentParser):
 def entry_point():
     cl_args = ArgumentParser().parse_args()
     output = parse_output(cl_args.input.read())
+    print output
     esc = ElasticSearchClient()
     for line in output:
         esc.index(logs=cl_args.logs, env=cl_args.environment, **line)
