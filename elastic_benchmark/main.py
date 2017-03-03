@@ -14,6 +14,7 @@ class ElasticSearchClient(object):
         self.client = Elasticsearch()
 
     def index(self, scenario_name, env, **kwargs):
+        print "{0}_{1}".format(env, scenario_name.lower())
         self.client.index(
             index="{0}_{1}".format(env, scenario_name.lower()),
             doc_type='results', body=kwargs)
@@ -106,7 +107,6 @@ class ArgumentParser(argparse.ArgumentParser):
 def entry_point():
     cl_args = ArgumentParser().parse_args()
     output = parse_output(cl_args.input.read())
-    print output
     esc = ElasticSearchClient()
     for line in output:
         esc.index(logs=cl_args.logs, env=cl_args.environment, **line)
