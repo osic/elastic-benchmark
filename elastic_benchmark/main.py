@@ -14,7 +14,7 @@ class ElasticSearchClient(object):
         self.client = Elasticsearch()
 
     def index(self, scenario_name, env, **kwargs):
-        print "{0}_{1}".format(env, scenario_name.lower())
+
         self.client.index(
             index="{0}_{1}".format(env, scenario_name.lower()),
             doc_type='results', body=kwargs)
