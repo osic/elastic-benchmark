@@ -38,6 +38,7 @@ def parse_output(output):
             run_at = ir.get('timestamp')
             duration = ir.get('duration')
             result = 'pass' if len(ir.get('error')) == 0 else 'fail'
+            print "scenario_name: " + prefix + "_" + scenario_name
             return_data.append({
                 "scenario_name": prefix + "_" + scenario_name,
                 "run_id": run_id,
