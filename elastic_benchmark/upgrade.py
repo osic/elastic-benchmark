@@ -146,6 +146,8 @@ def parse_during_from_status(output):
     uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
     during_data.update({line['service'] + "_during_uptime": uptime_pct})
+    during_data.update(line['service'] + "_during_duration": round(line['duration']),1)
+    during_data.update(line['service'] + "_during_total_down": round(line['total_down']),1)	    
     return during_data
 
 def parse_api_from_status(output):
@@ -166,6 +168,7 @@ def parse_api_from_status(output):
     line = linelist[len(linelist)-1].strip()
     line = json.loads(line)
 
+    #If it is one of the api tests go here
     if cl_args.apig or cl_args.apiw:
         for i in range(len(linelist)):
 	    one_line = linelist[i]
@@ -178,6 +181,8 @@ def parse_api_from_status(output):
 
     if cl_args.apig or cl_args.apiw:
 	during_data.update({line['service'] + "_api_uptime": uptime_pct})
+        during_data.update(line['service'] + "_api_duration": round(line['duration']),1)
+        during_data.update(line['service'] + "_api_total_down": round(line['total_down']),1)
     else:
         during_data.update({line['service'] + "_during_uptime": uptime_pct})
     print during_data
