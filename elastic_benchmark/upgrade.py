@@ -145,9 +145,9 @@ def parse_during_from_status(output):
 
     uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
-    during_data.update({line['service'] + "_during_uptime": uptime_pct})
-    during_data.update({line['service'] + "_during_duration": round(line['duration'])})
-    during_data.update({line['service'] + "_during_total_down": round(line['total_down'])})
+    during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
+    during_data.update({"{}_during_duration".format(line['service']): round(line['duration'])})
+    during_data.update({"{}_during_total_down".format(line['service']): round(line['total_down'])})
     return during_data
 
 def parse_api_from_status(output):
@@ -180,11 +180,11 @@ def parse_api_from_status(output):
         uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
     if cl_args.apig or cl_args.apiw:
-        during_data.update({line['service'] + "_api_uptime": uptime_pct})
-        during_data.update({line['service'] + "_api_duration": round(line['duration'])})
-        during_data.update({line['service'] + "_api_total_down": round(line['total_down'])})
+        during_data.update({"{}_api_uptime": uptime_pct})
+        during_data.update({"{}_api_duration".format(line['service']): round(line['duration'])})
+        during_data.update({"{}_api_total_down".format(line['service']): round(line['total_down'])})
     else:
-        during_data.update({line['service'] + "_during_uptime": uptime_pct})
+        during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
     print during_data
     return during_data
 
