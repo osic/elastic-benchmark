@@ -40,14 +40,14 @@ def parse_console_output(output):
 
 def parse_differences(before, after):
     # If the test fails there will be no after tests so it will skip differences logic
-    if before == None:
+    if before is None:
         return {"smoke_before_success_pct": None,
                 "smoke_before_success_total": None,
                 "smoke_before_failures_total": None}
 
     if after:
         different_keys = set(after.tests.keys()) - set(before.tests.keys())
-	print after.tests.keys()
+        print after.tests.keys()
         different_keys.update(set(before.tests.keys()) - set(after.tests.keys()))
         different_keys.update([key for key, value in after.tests.items()
                            if before.tests.get(key) != value])
@@ -90,11 +90,11 @@ def parse_persistence_validation(before, after):
 
 def parse_uptime(output):
     # This is for cases when test fails soon
-    if output == None:
+    if output is None:
         return {"api_uptime": None}
-    elif  os.path.isfile(output) == False:
-	print "File " + output + " does not exist."
-	return {"api_uptime": None}
+    elif not os.path.isfile(output):
+        print "File {} does not exist.".format(output)
+        return {"api_uptime": None}
 
     data = json.loads(open(output).read())
     api_data = {}
@@ -109,10 +109,10 @@ def parse_uptime(output):
 
 def parse_during(output):
     # This is for cases when test fails soon
-    if output == None:
-	return {"during_uptime": None}
-    elif  os.path.isfile(output) == False:
-	print "File " + output + " does not exist."
+    if output is None:
+        return {"during_uptime": None}
+    elif not os.path.isfile(output):
+        print "File {} does not exist.".format(output)
         return {"during_uptime": None}
                                                                                              
     data = json.loads(open(output).read())
@@ -122,17 +122,17 @@ def parse_during(output):
         during_data.update({"{0}_during_uptime".format(k): v["uptime_pct"]})
         during_data.update({"{0}_during_success".format(k): v["successful_requests"]})
         during_data.update({"{0}_during_total".format(k): v["total_requests"]})
-	during_data.update({"{0}_down_time".format(k): v["down_time"]})
+        during_data.update({"{0}_down_time".format(k): v["down_time"]})
 	
     return during_data
 
 def parse_during_from_status(output):
     # This is for cases when test fails soon
     down_time = 0
-    if output == None:
-	return {"during_uptime": None}
-    elif  os.path.isfile(output) == False:
-	print "File " + output + " does not exist."
+    if output is None:
+        return {"during_uptime": None}
+    elif not os.path.isfile(output):
+        print "File {} does not exist.".format(output)
         return {"during_uptime": None}
 
     during_data = {}
@@ -145,19 +145,19 @@ def parse_during_from_status(output):
 
     uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
-    during_data.update({line['service'] + "_during_uptime": uptime_pct})
-    during_data.update(line['service'] + "_during_duration": round(line['duration']),1)
-    during_data.update(line['service'] + "_during_total_down": round(line['total_down']),1)	    
+    during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
+    during_data.update({"{}_during_duration".format(line['service']): round(line['duration'])})
+    during_data.update({"{}_during_total_down".format(line['service']): round(line['total_down'])})
     return during_data
 
 def parse_api_from_status(output):
     # This is for cases when test fails soon
     cl_args = ArgumentParser().parse_args()
     down_time = 0
-    if output == None:
-	return {"api_uptime": None}
-    elif  os.path.isfile(output) == False:
-	print "File " + output + " does not exist."
+    if output is None:
+        return {"api_uptime": None}
+    elif  not os.path.isfile(output):
+        print "File {} does not exist.".format(output)
         return {"api_uptime": None}
 
     during_data = {}
@@ -171,30 +171,30 @@ def parse_api_from_status(output):
     #If it is one of the api tests go here
     if cl_args.apig or cl_args.apiw:
         for i in range(len(linelist)):
-	    one_line = linelist[i]
-	    one_line = json.loads(one_line)
+            one_line = linelist[i]
+            one_line = json.loads(one_line)
             down_time += one_line['status']
-	line['total_down'] = line['duration'] - down_time
-	uptime_pct = str(round(((float(line['duration']) - line['total_down']) / line['duration']) * 100, 1))
+        line['total_down'] = line['duration'] - down_time
+        uptime_pct = str(round(((float(line['duration']) - line['total_down']) / line['duration']) * 100, 1))
     else:
         uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
     if cl_args.apig or cl_args.apiw:
-	during_data.update({line['service'] + "_api_uptime": uptime_pct})
-        during_data.update(line['service'] + "_api_duration": round(line['duration']),1)
-        during_data.update(line['service'] + "_api_total_down": round(line['total_down']),1)
+        during_data.update({"{}_api_uptime": uptime_pct})
+        during_data.update({"{}_api_duration".format(line['service']): round(line['duration'])})
+        during_data.update({"{}_api_total_down".format(line['service']): round(line['total_down'])})
     else:
-        during_data.update({line['service'] + "_during_uptime": uptime_pct})
+        during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
     print during_data
     return during_data
 
 def parse_persistence(output):
     # This is for cases when test fails soon
-    if output == None or os.path.isfile(output) == False:
+    if output is None or not os.path.isfile(output):
         return {"persistence_uptime": None}
-    elif  os.path.isfile(output) == False:
-	print "File " + output + " does not exist."
-	return {"persistence_uptime": None}
+    elif not os.path.isfile(output):
+        print "File {} does not exist.".format(output)
+        return {"persistence_uptime": None}
 
     data = json.loads(open(output).read())
 
@@ -208,7 +208,7 @@ def parse_persistence(output):
         for s in v['create']:
             body.update({k + '_' + s['task']: s['create']})
         for s in v['after-validate']:
-	    after_validation_status = s['after-validate'] * after_validation_status
+            after_validation_status = s['after-validate'] * after_validation_status
             body.update({k + '_' + s['task']: after_validation_status})
         for s in v['before-validate']:
             before_validation_status = s['before-validate'] * before_validation_status
@@ -346,16 +346,20 @@ class ArgumentParser(argparse.ArgumentParser):
             "-w", "--apiw", metavar="<api status logs>",
             required=False, default=None, help="Api status logs.")
 
+        self.add_argument(
+            "-m", "--environment", metavar="<environment>",
+            required=True, default=None, help="Environment name for ElasticSearch index.")
+
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
                           default=sys.stdin)
 
 
 def parse(subunit_file, non_subunit_name="pythonlogging"):
     # In some cases the upgrade may fail in the before test section and there will be no after
-    if subunit_file == None:
+    if subunit_file is None:
         return None
-    elif  os.path.isfile(subunit_file) == False:
-	print "File " + subunit_file + " does not exist."
+    elif not os.path.isfile(subunit_file):
+        print "File {} does not exist.".format(subunit_file)
         return None
 
     subunit_parser = SubunitParser()
@@ -385,40 +389,40 @@ def entry_point():
     esc = ElasticSearchClient()
 
     # Parses aggregate log file
-    if cl_args.status == None:
+    if cl_args.status is None:
         current_time = str(datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z"))
 	
-	print "Start aggregating results."
-	if cl_args.before:
+        print "Start aggregating results."
+        if cl_args.before:
             before = parse(cl_args.before)
             after = parse(cl_args.after)
             differences = parse_differences(before, after)
         differences.update(parse_uptime(cl_args.uptime))
         differences.update(parse_during(cl_args.during))
-	differences.update(parse_during_from_status(cl_args.swift))
-	differences.update(parse_during_from_status(cl_args.keystone))
-	differences.update(parse_during_from_status(cl_args.nova))
-	differences.update(parse_api_from_status(cl_args.apig))
-	differences.update(parse_api_from_status(cl_args.apiw))
+        differences.update(parse_during_from_status(cl_args.swift))
+        differences.update(parse_during_from_status(cl_args.keystone))
+        differences.update(parse_during_from_status(cl_args.nova))
+        differences.update(parse_api_from_status(cl_args.apig))
+        differences.update(parse_api_from_status(cl_args.apiw))
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
-	print differences
-        esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
-	print "Done aggregating results. "
+        print differences
+        esc.index(scenario_name='upgrade_test', env=cl_args.environment, **differences)
+        print "Done aggregating results. "
     else:
-	status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
+        status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
 
-	for s in status_files:
+        for s in status_files:
             # Parses status log file
-	    print "Start parsing status file: " + str(s)
+	        print "Start parsing status file: {}".format(str(s))
 
-	    if os.path.isfile(s) == True:
-		    with open(s) as f:
-			for line in f:
-			    if line.strip():
-				line = json.loads(line)
-				if 'api' in cl_args.status:
-				    esc.index(scenario_name='upgrade_api_status_log', env='osa_onmetal', **line)
-				else:
-				    esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line) 
-	    print "Done parsing " + str(s)
+            if os.path.isfile(s):
+                with open(s) as f:
+                    for line in f:
+                        if line.strip():
+                            line = json.loads(line)
+                            if 'api' in cl_args.status:
+                                esc.index(scenario_name='upgrade_api_status_log', env=cl_args.environment, **line)
+                            else:
+                                esc.index(scenario_name='upgrade_status_log', env=cl_args.environment, **line)
+            print "Done parsing {}".format(str(s))
