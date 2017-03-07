@@ -346,6 +346,10 @@ class ArgumentParser(argparse.ArgumentParser):
             "-w", "--apiw", metavar="<api status logs>",
             required=False, default=None, help="Api status logs.")
 
+        self.add_argument(
+            "-m", "--environment", metavar="<environment>",
+            required=True, default=None, help="Environment name for ElasticSearch index.")
+
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
                           default=sys.stdin)
 
@@ -403,7 +407,7 @@ def entry_point():
         differences.update(parse_persistence(cl_args.persistence))
         differences.update({"done_time": current_time})
         print differences
-        esc.index(scenario_name='upgrade_test', env='osa_onmetal', **differences)
+        esc.index(scenario_name='upgrade_test', env=cl_args.environment, **differences)
         print "Done aggregating results. "
     else:
         status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
@@ -418,7 +422,7 @@ def entry_point():
                         if line.strip():
                             line = json.loads(line)
                             if 'api' in cl_args.status:
-                                esc.index(scenario_name='upgrade_api_status_log', env='osa_onmetal', **line)
+                                esc.index(scenario_name='upgrade_api_status_log', env=cl_args.environment, **line)
                             else:
-                                esc.index(scenario_name='upgrade_status_log', env='osa_onmetal', **line)
+                                esc.index(scenario_name='upgrade_status_log', env=cl_args.environment, **line)
             print "Done parsing {}".format(str(s))
