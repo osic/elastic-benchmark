@@ -414,7 +414,7 @@ def entry_point():
 
         for s in status_files:
             # Parses status log file
-            print "Start parsing status file: {}".format(str(s))
+	        print "Start parsing status file: {}".format(str(s))
 
             if os.path.isfile(s):
                 with open(s) as f:
