@@ -348,7 +348,7 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "-m", "--environment", metavar="<environment>",
-            required=True, default=None, help="Environment name for ElasticSearch index.")
+            required=True, default="osa_baremetal", help="Environment name for ElasticSearch index.")
 
         self.add_argument('input', nargs='?', type=argparse.FileType('r'),
                           default=sys.stdin)
