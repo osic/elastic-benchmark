@@ -126,6 +126,7 @@ def parse_during(output):
 	
     return during_data
 
+
 def parse_during_from_status(output):
     # This is for cases when test fails soon
     down_time = 0
@@ -136,19 +137,24 @@ def parse_during_from_status(output):
         return {"during_uptime": None}
 
     during_data = {}
-                                                                                             
+
     statuslog = open(output, "r")
     linelist = statuslog.readlines()
     statuslog.close()
     line = linelist[len(linelist)-1].strip()
     line = json.loads(line)
 
-    uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
+    service = line['service']
 
-    during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
-    during_data.update({"{}_during_duration".format(line['service']): round(line['duration'])})
-    during_data.update({"{}_during_total_down".format(line['service']): round(line['total_down'])})
+    uptime_pct = str(round(((line[service + '_duration'] - line[service + '_total_down']) / line[service + '_duration']) * 100, 1))
+
+
+
+    during_data.update({service + "_during_uptime": uptime_pct})
+    during_data.update({service + "_during_duration": round(line[service + '_duration'])})
+    during_data.update({service + "_during_total_down": round(line[service + '_total_down'])})
     return during_data
+
 
 def parse_api_from_status(output):
     # This is for cases when test fails soon
@@ -161,12 +167,13 @@ def parse_api_from_status(output):
         return {"api_uptime": None}
 
     during_data = {}
-                                                                                             
+
     statuslog = open(output, "r")
     linelist = statuslog.readlines()
     statuslog.close()
     line = linelist[len(linelist)-1].strip()
     line = json.loads(line)
+    service = line['service']
 
     #If it is one of the api tests go here
     if cl_args.apig or cl_args.apiw:
@@ -180,13 +187,14 @@ def parse_api_from_status(output):
         uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
     if cl_args.apig or cl_args.apiw:
-        during_data.update({"{}_api_uptime": uptime_pct})
-        during_data.update({"{}_api_duration".format(line['service']): round(line['duration'])})
-        during_data.update({"{}_api_total_down".format(line['service']): round(line['total_down'])})
+        during_data.update({service + "_api_uptime": uptime_pct})
+        during_data.update({service + "_api_duration": round(line['duration'])})
+        during_data.update({service + "_api_total_down": round(line['total_down'])})
     else:
-        during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
+        during_data.update({service + "_during_uptime": uptime_pct})
     print during_data
     return during_data
+
 
 def parse_persistence(output):
     # This is for cases when test fails soon
@@ -384,7 +392,7 @@ def parse(subunit_file, non_subunit_name="pythonlogging"):
 
 def entry_point():
     current_time = ''
-    differences = {}
+    summary = {}
     cl_args = ArgumentParser().parse_args()
     esc = ElasticSearchClient()
 
@@ -396,18 +404,18 @@ def entry_point():
         if cl_args.before:
             before = parse(cl_args.before)
             after = parse(cl_args.after)
-            differences = parse_differences(before, after)
-        differences.update(parse_uptime(cl_args.uptime))
-        differences.update(parse_during(cl_args.during))
-        differences.update(parse_during_from_status(cl_args.swift))
-        differences.update(parse_during_from_status(cl_args.keystone))
-        differences.update(parse_during_from_status(cl_args.nova))
-        differences.update(parse_api_from_status(cl_args.apig))
-        differences.update(parse_api_from_status(cl_args.apiw))
-        differences.update(parse_persistence(cl_args.persistence))
-        differences.update({"done_time": current_time})
-        print differences
-        esc.index(scenario_name='upgrade_test', env=cl_args.environment, **differences)
+            summary = parse_differences(before, after)
+        summary.update(parse_uptime(cl_args.uptime))
+        summary.update(parse_during(cl_args.during))
+        summary.update(parse_during_from_status(cl_args.swift))
+        summary.update(parse_during_from_status(cl_args.keystone))
+        summary.update(parse_during_from_status(cl_args.nova))
+        summary.update(parse_api_from_status(cl_args.apig))
+        summary.update(parse_api_from_status(cl_args.apiw))
+        summary.update(parse_persistence(cl_args.persistence))
+        summary.update({"done_time": current_time})
+        print summary
+        esc.index(scenario_name='upgrade_test', env=cl_args.environment, **summary)
         print "Done aggregating results. "
     else:
         status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
