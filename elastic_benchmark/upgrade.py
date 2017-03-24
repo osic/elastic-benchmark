@@ -143,11 +143,15 @@ def parse_during_from_status(output):
     line = linelist[len(linelist)-1].strip()
     line = json.loads(line)
 
-    uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
+    service = line['service']
 
-    during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
-    during_data.update({"{}_during_duration".format(line['service']): round(line['duration'])})
-    during_data.update({"{}_during_total_down".format(line['service']): round(line['total_down'])})
+    uptime_pct = str(round(((line[service + '_duration'] - line[service + '_total_down']) / line[service + '_duration']) * 100, 1))
+
+
+
+    during_data.update({service + "_during_uptime": uptime_pct})
+    during_data.update({service + "_during_duration": round(line[service + '_duration'])})
+    during_data.update({service + "_during_total_down": round(line[service + '_total_down'])})
     return during_data
 
 def parse_api_from_status(output):
@@ -167,6 +171,7 @@ def parse_api_from_status(output):
     statuslog.close()
     line = linelist[len(linelist)-1].strip()
     line = json.loads(line)
+    service = line['service']
 
     #If it is one of the api tests go here
     if cl_args.apig or cl_args.apiw:
@@ -180,11 +185,11 @@ def parse_api_from_status(output):
         uptime_pct = str(round(((line['duration'] - line['total_down']) / line['duration']) * 100, 1))
 
     if cl_args.apig or cl_args.apiw:
-        during_data.update({"{}_api_uptime": uptime_pct})
-        during_data.update({"{}_api_duration".format(line['service']): round(line['duration'])})
-        during_data.update({"{}_api_total_down".format(line['service']): round(line['total_down'])})
+        during_data.update({service + "_api_uptime": uptime_pct})
+        during_data.update({service + "_api_duration": round(line['duration'])})
+        during_data.update({service + "_api_total_down": round(line['total_down'])})
     else:
-        during_data.update({"{}_during_uptime".format(line['service']): uptime_pct})
+        during_data.update({service + "_during_uptime": uptime_pct})
     print during_data
     return during_data
 
