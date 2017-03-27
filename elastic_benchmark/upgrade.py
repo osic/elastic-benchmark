@@ -429,7 +429,10 @@ def entry_point():
         summary.update(parse_upgrade_time())
         summary.update({"done_time": current_time})
         print summary
+        esc.delete(scenario_name='latest_upgrade_test',env=cl_args.environment)
+        esc.index(scenario_name='latest_upgrade_test', env=cl_args.environment, **summary)
         esc.index(scenario_name='upgrade_test', env=cl_args.environment, **summary)
+
         print "Done aggregating results. "
     else:
         status_files = [status_files.strip() for status_files in (cl_args.status).split(",")]
