@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "b4649a36_568afe02",
+        "filename": "elastic_benchmark/main.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1010716
+      },
+      "writtenOn": "2017-03-27T23:08:15Z",
+      "side": 1,
+      "message": "Please pull the latest version. I already removed the 400 :).  Also this doesn\u0027t pull the summary at all.  It only grabs an index name.  I may not be grasping what you are saying.  This is a delete() index http://elasticsearch-py.readthedocs.io/en/master/api.html#elasticsearch.Elasticsearch.delete.  This is not index() as you linked.",
+      "parentUuid": "d4df8b64_db4c9e09",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9231a665_741c63db",
         "filename": "elastic_benchmark/upgrade.py",
         "patchSetId": 1
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "Sorry for the confusion, I used \"index\" where I should have used \"document.\"\n\nI understand this would be only a small document and not affect the performance or storage space used in this database. But, using a more complicated query that handles a sort and limit to return what is desired is a better route than removing and recreating an index by duplicating a document each time data is entered to make an easier query.\n\nBut, I\u0027ll happily concede on this as you\u0027re not only more familiar with the database and dashboard, and also so we\u0027re not investing more time discussing a small point and taking away from the time and effort that this is intended to be saving. :D",
       "parentUuid": "42ad74f5_27da57e2",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3deae9f7_3865296a",
+        "filename": "elastic_benchmark/upgrade.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1010716
+      },
+      "writtenOn": "2017-03-27T23:08:15Z",
+      "side": 1,
+      "message": "No problem.  The thing here is I can query and get the latest run. Kibana can\u0027t. I have to delete the index anyway in order to accomplish what I\u0027m trying to accomplish.  If I get the lastest run and add on to this index then it\u0027s not doing anything different from the last index.  I\u0027m creating a page that will only include the last run.  It\u0027s really a hack of sorts for Kibana because it doesn\u0027t give me an easy way to do it.",
+      "parentUuid": "88b7c443_f955d289",
       "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
