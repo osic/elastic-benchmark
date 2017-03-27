@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "f7096396_f74c6d44",
+        "filename": "elastic_benchmark/main.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1010733
+      },
+      "writtenOn": "2017-03-27T23:21:34Z",
+      "side": 1,
+      "message": "Figured out how to pull the latest patch.\n\nThe API documentation I linked and what I was referring to was what would happen in calling index() *after* delete(). My concern is that when running index() and adding data to the dashboard, that is what would add more data to the existing index and invalidate the change this is trying to do. The index would exist and that would happen *if* the delete failed due to a 400 that was ignored rather than throwing an error.\n\nThat was why I felt the 400 should not be ignored. Not because of an issue specifically with the delete() call, but what would happen in the following index() calls if the delete() failed with a 400 that was ignored.",
+      "parentUuid": "b4649a36_568afe02",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9231a665_741c63db",
         "filename": "elastic_benchmark/upgrade.py",
         "patchSetId": 1
@@ -138,6 +156,24 @@
       "side": 1,
       "message": "No problem.  The thing here is I can query and get the latest run. Kibana can\u0027t. I have to delete the index anyway in order to accomplish what I\u0027m trying to accomplish.  If I get the lastest run and add on to this index then it\u0027s not doing anything different from the last index.  I\u0027m creating a page that will only include the last run.  It\u0027s really a hack of sorts for Kibana because it doesn\u0027t give me an easy way to do it.",
       "parentUuid": "88b7c443_f955d289",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "448b2154_f5034234",
+        "filename": "elastic_benchmark/upgrade.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1010733
+      },
+      "writtenOn": "2017-03-27T23:21:34Z",
+      "side": 1,
+      "message": "Sold.",
+      "parentUuid": "3deae9f7_3865296a",
       "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
