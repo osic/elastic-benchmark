@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d4df8b64_db4c9e09",
+        "filename": "elastic_benchmark/main.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1010733
+      },
+      "writtenOn": "2017-03-27T22:58:33Z",
+      "side": 1,
+      "message": "Documentation is at http://elasticsearch-py.readthedocs.io/en/master/api.html#elasticsearch.Elasticsearch.index. Since the ID is not specified in the summary dict, it will add rather than update if the index exists.\n\nIt probably would not happen at all since the delete body wouldn\u0027t be changing, therefore would be unlikely to return a 400. but in the event it does it would require manual deletion from the database, and invalidate the intended use of this index until it is removed.\n\nI understand the 404 and think that should stay, I just think that any other unexpected error code should not be ignored.",
+      "parentUuid": "7c0d2b96_b7279532",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9231a665_741c63db",
         "filename": "elastic_benchmark/upgrade.py",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Yes, of course ES is capable of doing that but I chose to go this route. This is actually less code than the query would be and similar if not less than the lookup. This is not a duplication of an index.  I am deleting the index then creating it again with the latest data.  At most this index will only have 1 document in it at a time. Please point me to why you feel it will be duplicated.  Thanks.",
       "parentUuid": "9231a665_741c63db",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88b7c443_f955d289",
+        "filename": "elastic_benchmark/upgrade.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1010733
+      },
+      "writtenOn": "2017-03-27T22:58:33Z",
+      "side": 1,
+      "message": "Sorry for the confusion, I used \"index\" where I should have used \"document.\"\n\nI understand this would be only a small document and not affect the performance or storage space used in this database. But, using a more complicated query that handles a sort and limit to return what is desired is a better route than removing and recreating an index by duplicating a document each time data is entered to make an easier query.\n\nBut, I\u0027ll happily concede on this as you\u0027re not only more familiar with the database and dashboard, and also so we\u0027re not investing more time discussing a small point and taking away from the time and effort that this is intended to be saving. :D",
+      "parentUuid": "42ad74f5_27da57e2",
       "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
