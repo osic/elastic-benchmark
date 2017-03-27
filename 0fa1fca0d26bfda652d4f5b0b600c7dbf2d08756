@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7c0d2b96_b7279532",
+        "filename": "elastic_benchmark/main.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1010716
+      },
+      "writtenOn": "2017-03-27T22:04:11Z",
+      "side": 1,
+      "message": "I\u0027m not aware of that.  But according to my tests there is only one run stored under the index once this is run which deletes the last record. Please point me to the documentation.  Thanks.",
+      "parentUuid": "d0f644e6_9a881ac6",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9231a665_741c63db",
         "filename": "elastic_benchmark/upgrade.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-27T21:36:09Z",
       "side": 1,
       "message": "This seems like more effort than it should be, causing a duplication of an index for what should be a basic feature of databases. Is ES/Kibana unable to display the latest results using a SORT and LIMIT-type query to only return the most recent results?",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42ad74f5_27da57e2",
+        "filename": "elastic_benchmark/upgrade.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1010716
+      },
+      "writtenOn": "2017-03-27T22:04:11Z",
+      "side": 1,
+      "message": "Yes, of course ES is capable of doing that but I chose to go this route. This is actually less code than the query would be and similar if not less than the lookup. This is not a duplication of an index.  I am deleting the index then creating it again with the latest data.  At most this index will only have 1 document in it at a time. Please point me to why you feel it will be duplicated.  Thanks.",
+      "parentUuid": "9231a665_741c63db",
       "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
