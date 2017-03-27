@@ -19,6 +19,11 @@ class ElasticSearchClient(object):
             index="{0}_{1}".format(env, scenario_name.lower()),
             doc_type='results', body=kwargs)
 
+    def delete(self, scenario_name, env):
+
+        self.client.indices.delete(
+            index="{0}_{1}".format(env, scenario_name.lower()), ignore=[400, 404])
+
 
 def parse_output(output):
     prefix = ''
