@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0f644e6_9a881ac6",
+        "filename": "elastic_benchmark/main.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1010733
+      },
+      "writtenOn": "2017-03-27T21:36:09Z",
+      "side": 1,
+      "message": "While 400\u0027s are probably unlikely, these should probably be caught and reported rather than ignored. Per the documentation it looks like this would add the new data to the existing index, which would result in multiple runs being stored under this index rather than a single run as intended in this change.",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9231a665_741c63db",
+        "filename": "elastic_benchmark/upgrade.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1010733
+      },
+      "writtenOn": "2017-03-27T21:36:09Z",
+      "side": 1,
+      "message": "This seems like more effort than it should be, causing a duplication of an index for what should be a basic feature of databases. Is ES/Kibana unable to display the latest results using a SORT and LIMIT-type query to only return the most recent results?",
+      "revId": "0fa1fca0d26bfda652d4f5b0b600c7dbf2d08756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
